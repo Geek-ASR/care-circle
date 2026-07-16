@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#171513" />
+    <meta
+      name="description"
+      content="CareCircle — a community platform where people living with chronic illness find others who understand, share experiences, and support each other."
+    />
+    <title>CareCircle</title>
+    <script>
+      // Applied before React mounts to avoid a flash of the wrong theme.
+      // Dark mode first, by design: unlike most apps, this does NOT derive
+      // from prefers-color-scheme — dark is the default until the user
+      // explicitly opts into light via the theme toggle.
+      ;(function () {
+        try {
+          var stored = localStorage.getItem('care-circle-theme')
+          var theme = stored === 'light' ? 'light' : 'dark'
+          document.documentElement.classList.toggle('light', theme === 'light')
+          document.documentElement.classList.toggle('dark', theme === 'dark')
+        } catch {
+          /* localStorage unavailable (e.g. private mode) — dark default stands */
+        }
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

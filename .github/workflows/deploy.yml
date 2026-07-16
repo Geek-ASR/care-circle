@@ -1,0 +1,88 @@
+# Deploys the apps/web SPA build to GitHub Pages.
+#
+# One-time setup required before this workflow will succeed:
+#   1. Settings -> Pages -> Source must be set to "GitHub Actions"
+#      (NOT the legacy "Deploy from a branch" option). Without this, the
+#      actions/deploy-pages step has nothing to deploy to and will fail.
+#   2. Add these repo secrets under Settings -> Secrets and variables ->
+#      Actions before the first run:
+#        - VITE_SUPABASE_URL
+#        - VITE_SUPABASE_ANON_KEY
+#      (See docs/environment-variables.md for where to find these values
+#      and docs/deployment-guide.md for the full setup walkthrough.)
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one Pages deployment at a time; never cancel one that's in flight
+# so a deploy can't be left half-applied.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies (all workspaces)
+        run: npm ci
+
+      # Not strictly required since VITE_BASE_PATH is hardcoded below, but
+      # this validates that Pages is configured for "GitHub Actions" builds
+      # and future-proofs us if we ever want to consume its `base_path`
+      # output instead of hardcoding the repo name.
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_BASE_PATH: /care-circle/
+        run: npm run build --workspace apps/web
+
+      # GitHub Pages has no server-side rewrites, so a hard refresh or a
+      # shared deep link to a client-side route (e.g. /c/general/post/123)
+      # 404s. Serving a copy of index.html as 404.html lets the SPA router
+      # take over and resolve the route client-side instead.
+      - name: SPA deep-link fallback (404.html)
+        run: cp apps/web/dist/index.html apps/web/dist/404.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/web/dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

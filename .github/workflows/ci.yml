@@ -1,0 +1,50 @@
+name: CI
+
+# Runs the full quality gate (format, lint, typecheck, test, build) against
+# every pull request targeting main, and again against main itself on push
+# so that main never goes green->red silently after a merge.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  quality-gate:
+    name: Format, lint, typecheck, test, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        node-version: [22]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies (all workspaces)
+        run: npm ci
+
+      # Steps below run in sequence and fail fast (default `jobs.<job>.steps`
+      # behavior) so the first failing check stops the job immediately.
+      - name: Check formatting
+        run: npm run format:check --workspace apps/web
+
+      - name: Lint
+        run: npm run lint --workspace apps/web
+
+      - name: Typecheck
+        run: npm run typecheck --workspace apps/web
+
+      - name: Test
+        run: npm run test --workspace apps/web
+
+      - name: Build
+        run: npm run build --workspace apps/web
