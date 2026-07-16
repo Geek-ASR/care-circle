@@ -5,19 +5,19 @@
 Vite bundles any variable prefixed `VITE_` directly into the client-side
 JavaScript that ships to every visitor's browser. **`VITE_`-prefixed
 values are public**, full stop — anyone can open devtools, view the
-bundle, and read them. This is why only the Supabase **anon key** is used
+bundle, and read them. This is why only the Supabase **publishable key** is used
 client-side, never a service-role key or any other secret.
 
 This is not a weakness particular to this project — it's how every static
-SPA works, and it's fine, because the anon key is *meant* to be public.
-Supabase's security model does not rely on the anon key being secret; it
+SPA works, and it's fine, because the publishable key is *meant* to be public.
+Supabase's security model does not rely on the publishable key being secret; it
 relies on **Row Level Security (RLS) policies** in Postgres to decide what
 each request is allowed to read or write, based on the caller's
 authenticated identity (or lack of one). See
 [`docs/database-schema.md`](./database-schema.md#row-level-security-rls-strategy)
 for how RLS is structured in this project. If RLS on a table is wrong, no
-amount of hiding the anon key would fix it — and if RLS is right, the anon
-key being public doesn't matter.
+amount of hiding the publishable key would fix it — and if RLS is right,
+the publishable key being public doesn't matter.
 
 The CI-only secrets below are the opposite: they must **never** be
 prefixed `VITE_`, never referenced from `apps/web/src`, and never appear
@@ -35,7 +35,7 @@ the shipped JS bundle. Set locally in `apps/web/.env.local` (see
 | Name | Used in | Example value | Notes |
 |---|---|---|---|
 | `VITE_SUPABASE_URL` | Client build; injected in CI from repo secret `VITE_SUPABASE_URL` | `https://abcdefghijklmnop.supabase.co` | Your Supabase project's API URL. Found in Supabase Studio: Project Settings → API → Project URL. Public — safe to expose. |
-| `VITE_SUPABASE_ANON_KEY` | Client build; injected in CI from repo secret `VITE_SUPABASE_ANON_KEY` | `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` | Supabase's public "anon"/"publishable" API key. Found in Supabase Studio: Project Settings → API → Project API keys → `anon` `public`. Public by design — RLS is the real gate, not this key. |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | Client build; injected in CI from repo secret `VITE_SUPABASE_PUBLISHABLE_KEY` | `sb_publishable_...` | Supabase's current name for the public client-side API key (previously called the "anon" key — same role). Found in Supabase Studio: Project Settings → API Keys → Publishable key. Public by design — RLS is the real gate, not this key. Never confuse with the **secret key** on the same page, which bypasses RLS and must never be used client-side. |
 | `VITE_BASE_PATH` | Build-time only (`vite.config.ts` reads `process.env.VITE_BASE_PATH` for Vite's `base` option); **not** read via `import.meta.env` in app code | `/care-circle/` | Set to `/care-circle/` in `deploy.yml` for the GitHub Pages project-site path. Not set locally — `vite.config.ts` falls back to `/` for local dev, which is what you want when running `npm run dev`. |
 
 ## CI-only secrets (never in client code)
@@ -59,6 +59,6 @@ apps/web/.env.example   ->  copy to  ->  apps/web/.env.local
 
 `apps/web/.env.local` is gitignored (see the repo's `.gitignore`) and
 should never be committed. Fill in your own Supabase project's URL and
-anon key — either your own free Supabase project for local hacking, or
+publishable key — either your own free Supabase project for local hacking, or
 values from `supabase start` if developing fully offline against the local
 Supabase stack (`supabase/config.toml` defines that local stack).

@@ -7,7 +7,7 @@
 #   2. Add these repo secrets under Settings -> Secrets and variables ->
 #      Actions before the first run:
 #        - VITE_SUPABASE_URL
-#        - VITE_SUPABASE_ANON_KEY
+#        - VITE_SUPABASE_PUBLISHABLE_KEY
 #      (See docs/environment-variables.md for where to find these values
 #      and docs/deployment-guide.md for the full setup walkthrough.)
 
@@ -58,7 +58,7 @@ jobs:
       - name: Build
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
           VITE_BASE_PATH: /care-circle/
         run: npm run build --workspace apps/web
 

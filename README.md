@@ -23,7 +23,7 @@ and how.
 
 ```sh
 npm install                                    # installs both workspaces
-cp apps/web/.env.example apps/web/.env.local   # then fill in your Supabase URL + anon key
+cp apps/web/.env.example apps/web/.env.local   # then fill in your Supabase URL + publishable key
 npm run dev
 ```
 

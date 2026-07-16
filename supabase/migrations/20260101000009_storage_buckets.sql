@@ -18,9 +18,12 @@
 
 set search_path = public, extensions;
 
--- storage.objects ships with RLS already enabled on hosted/local Supabase;
--- this is defensive/idempotent so the migration is correct standalone.
-alter table storage.objects enable row level security;
+-- storage.objects ships with RLS already enabled on hosted/local Supabase, owned
+-- by the internal supabase_storage_admin role. Unlike a table this migration set
+-- owns, re-running `alter table storage.objects enable row level security` here
+-- isn't just unnecessary — on hosted projects the `postgres` role isn't the table
+-- owner and the ALTER fails outright with a permission error, even though RLS is
+-- already on. Nothing to do here; the policies below are all this migration adds.
 
 -- ----------------------------------------------------------------------------
 -- Buckets

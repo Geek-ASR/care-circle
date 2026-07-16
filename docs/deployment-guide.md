@@ -13,11 +13,12 @@ secrets/URLs produced by earlier ones.
    note two values:
    - **Project URL** (e.g. `https://abcdefghijklmnop.supabase.co`) → this
      becomes `VITE_SUPABASE_URL`.
-   - **Project API keys → `anon` `public`** → this becomes
-     `VITE_SUPABASE_ANON_KEY`.
+   - **Project API Keys → Publishable key** → this becomes
+     `VITE_SUPABASE_PUBLISHABLE_KEY`. (Ignore the **secret key** on the
+     same page — that one bypasses RLS and is never used client-side.)
    
    See [`docs/environment-variables.md`](./environment-variables.md) for
-   why the anon key is safe to treat as public.
+   why the publishable key is safe to treat as public.
 
 ## 2. Apply the database schema
 
@@ -94,7 +95,7 @@ since those are the source of truth). If a bucket is missing, re-run
    | Secret | Value |
    |---|---|
    | `VITE_SUPABASE_URL` | from step 1 |
-   | `VITE_SUPABASE_ANON_KEY` | from step 1 |
+   | `VITE_SUPABASE_PUBLISHABLE_KEY` | from step 1 |
    | `SUPABASE_ACCESS_TOKEN` | Supabase account → [Access Tokens](https://supabase.com/dashboard/account/tokens) → generate a new token |
    | `SUPABASE_PROJECT_ID` | your project ref (same value used in `supabase link --project-ref`) |
    | `SUPABASE_DB_PASSWORD` | the database password from step 1 |
@@ -128,7 +129,7 @@ after rotating a secret.
 
 ```sh
 npm install                                            # from repo root — installs both workspaces
-cp apps/web/.env.example apps/web/.env.local            # then fill in your Supabase URL + anon key
+cp apps/web/.env.example apps/web/.env.local            # then fill in your Supabase URL + publishable key
 npm run dev                                             # starts the Vite dev server
 ```
 
