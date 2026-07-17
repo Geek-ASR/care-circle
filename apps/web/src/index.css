@@ -3,52 +3,60 @@
 /* Class-based dark mode: default is dark ("dark mode first"); .light overrides. */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/*
+ * "Soft Dusk" palette (chosen from the palette_review comparison over
+ * the original warm-brown/espresso dark theme, which read as heavy rather
+ * than calm). Neutrals sit in a cool slate-teal hue family (~220) instead of
+ * brown; primary is a softened peach/coral (~50) instead of saturated
+ * orange; secondary is a sage/mint green (~165), kept from the original
+ * secondary hue for continuity.
+ */
 :root {
-  --background: oklch(0.16 0.012 60);
-  --surface: oklch(0.2 0.013 60);
-  --surface-hover: oklch(0.24 0.015 60);
-  --surface-raised: oklch(0.22 0.014 60);
-  --border: oklch(0.29 0.015 60);
-  --border-strong: oklch(0.36 0.016 60);
-  --foreground: oklch(0.93 0.006 60);
-  --muted-foreground: oklch(0.66 0.012 60);
+  --background: oklch(0.2 0.02 220);
+  --surface: oklch(0.24 0.022 220);
+  --surface-hover: oklch(0.28 0.024 220);
+  --surface-raised: oklch(0.26 0.022 220);
+  --border: oklch(0.33 0.02 220);
+  --border-strong: oklch(0.4 0.02 220);
+  --foreground: oklch(0.94 0.008 220);
+  --muted-foreground: oklch(0.68 0.014 220);
 
-  --primary: oklch(0.72 0.15 40);
-  --primary-foreground: oklch(0.16 0.02 40);
-  --secondary: oklch(0.74 0.11 165);
+  --primary: oklch(0.75 0.13 50);
+  --primary-foreground: oklch(0.18 0.02 50);
+  --secondary: oklch(0.72 0.1 165);
   --secondary-foreground: oklch(0.16 0.02 165);
 
-  --success: oklch(0.72 0.14 150);
-  --warning: oklch(0.8 0.15 85);
-  --danger: oklch(0.65 0.19 25);
+  --success: oklch(0.72 0.13 150);
+  --warning: oklch(0.8 0.13 85);
+  --danger: oklch(0.68 0.16 25);
   --danger-foreground: oklch(0.98 0.01 25);
 
-  --ring: oklch(0.72 0.15 40 / 50%);
+  --ring: oklch(0.75 0.13 50 / 50%);
 
   color-scheme: dark;
 }
 
 :root.light {
-  --background: oklch(0.99 0.004 60);
-  --surface: oklch(0.975 0.006 60);
-  --surface-hover: oklch(0.95 0.008 60);
+  --background: oklch(0.98 0.006 220);
+  --surface: oklch(0.995 0.004 220);
+  --surface-hover: oklch(0.95 0.01 220);
   --surface-raised: oklch(1 0 0);
-  --border: oklch(0.9 0.008 60);
-  --border-strong: oklch(0.82 0.012 60);
-  --foreground: oklch(0.2 0.012 60);
-  --muted-foreground: oklch(0.46 0.014 60);
+  --border: oklch(0.9 0.01 220);
+  --border-strong: oklch(0.82 0.014 220);
+  --foreground: oklch(0.22 0.02 220);
+  --muted-foreground: oklch(0.48 0.016 220);
 
-  --primary: oklch(0.6 0.17 38);
-  --primary-foreground: oklch(0.99 0.01 38);
-  --secondary: oklch(0.55 0.12 165);
+  --primary: oklch(0.62 0.15 42);
+  --primary-foreground: oklch(0.99 0.01 42);
+  --secondary: oklch(0.55 0.11 165);
   --secondary-foreground: oklch(0.99 0.01 165);
 
-  --success: oklch(0.55 0.14 150);
-  --warning: oklch(0.65 0.16 80);
-  --danger: oklch(0.55 0.2 25);
+  --success: oklch(0.55 0.13 150);
+  --warning: oklch(0.65 0.15 80);
+  --danger: oklch(0.55 0.19 25);
   --danger-foreground: oklch(0.99 0.01 25);
 
-  --ring: oklch(0.6 0.17 38 / 45%);
+  --ring: oklch(0.62 0.15 42 / 45%);
 
   color-scheme: light;
 }
