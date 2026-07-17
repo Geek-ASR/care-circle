@@ -89,7 +89,19 @@ export default function PostPage() {
               </Link>
             )}
             <span>·</span>
-            <span>Posted by {authorName}</span>
+            {post.author ? (
+              <span>
+                Posted by{' '}
+                <Link
+                  to={`/u/${post.author.username}`}
+                  className="font-medium text-foreground hover:underline"
+                >
+                  {authorName}
+                </Link>
+              </span>
+            ) : (
+              <span>Posted by {authorName}</span>
+            )}
             <span>·</span>
             <span>
               {formatDistanceToNowStrict(new Date(post.created_at), { addSuffix: true })}

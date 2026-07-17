@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { formatDistanceToNowStrict } from 'date-fns'
 import { ChevronDown, ChevronRight, MessageSquare, Pencil, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui'
@@ -58,15 +59,24 @@ export function CommentItem({
               type="button"
               onClick={() => setCollapsed((c) => !c)}
               aria-label={collapsed ? 'Expand thread' : 'Collapse thread'}
-              className="flex items-center gap-1 hover:text-foreground"
+              className="hover:text-foreground"
             >
               {collapsed ? (
                 <ChevronRight className="h-3.5 w-3.5" />
               ) : (
                 <ChevronDown className="h-3.5 w-3.5" />
               )}
-              <span className="font-medium text-foreground">{authorName}</span>
             </button>
+            {comment.author ? (
+              <Link
+                to={`/u/${comment.author.username}`}
+                className="font-medium text-foreground hover:underline"
+              >
+                {authorName}
+              </Link>
+            ) : (
+              <span className="font-medium text-foreground">{authorName}</span>
+            )}
             <span>·</span>
             <span>
               {formatDistanceToNowStrict(new Date(comment.created_at), {
