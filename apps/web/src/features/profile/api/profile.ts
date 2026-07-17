@@ -4,7 +4,7 @@ import type { Profile } from '@/types/database'
 export type PublicProfile = Omit<Profile, 'privacy_settings' | 'notification_settings'>
 
 const PUBLIC_COLUMNS =
-  'id, username, display_name, avatar_url, banner_url, verified_diagnosis, reputation_score, theme_preference, onboarding_completed, created_at, updated_at'
+  'id, username, display_name, avatar_url, banner_url, verified_diagnosis, reputation_score, follower_count, following_count, theme_preference, onboarding_completed, created_at, updated_at'
 
 // Diagnosis/bio/age/gender/country/website/social_links are revoked at the column
 // level from the `anon` role (see supabase/migrations/20260101000011_security_hardening.sql)

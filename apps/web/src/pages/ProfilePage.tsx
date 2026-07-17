@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { CalendarDays, Globe, MapPin, MessageCircle } from 'lucide-react'
 import { format } from 'date-fns'
@@ -15,6 +15,7 @@ import { useProfileByUsername } from '@/features/profile/hooks/useProfile'
 import { usePostsByAuthor } from '@/features/posts/hooks/usePosts'
 import { PostCard } from '@/features/posts/components/PostCard'
 import { useStartConversation } from '@/features/chat/hooks/useChat'
+import { FollowButton } from '@/features/follows/components/FollowButton'
 import NotFoundPage from './NotFoundPage'
 
 export default function ProfilePage() {
@@ -68,15 +69,35 @@ export default function ProfilePage() {
             <p className="text-sm text-muted-foreground">@{profile.username}</p>
           </div>
           {user && user.id !== profile.id && (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => startConversation.mutate(profile.id)}
-              disabled={startConversation.isPending}
-            >
-              <MessageCircle className="h-4 w-4" /> Message
-            </Button>
+            <div className="flex items-center gap-2">
+              <FollowButton userId={profile.id} username={profile.username} />
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => startConversation.mutate(profile.id)}
+                disabled={startConversation.isPending}
+              >
+                <MessageCircle className="h-4 w-4" /> Message
+              </Button>
+            </div>
           )}
+        </div>
+
+        <div className="mt-3 flex items-center gap-4 text-sm">
+          <Link
+            to={`/u/${profile.username}/followers`}
+            className="text-foreground hover:underline"
+          >
+            <span className="font-semibold">{profile.follower_count}</span>{' '}
+            <span className="text-muted-foreground">followers</span>
+          </Link>
+          <Link
+            to={`/u/${profile.username}/following`}
+            className="text-foreground hover:underline"
+          >
+            <span className="font-semibold">{profile.following_count}</span>{' '}
+            <span className="text-muted-foreground">following</span>
+          </Link>
         </div>
 
         {profile.bio ? (

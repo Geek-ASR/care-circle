@@ -19,6 +19,8 @@ const SavedPostsPage = lazy(() => import('@/pages/SavedPostsPage'))
 const MessagesPage = lazy(() => import('@/pages/MessagesPage'))
 const ConversationPage = lazy(() => import('@/pages/ConversationPage'))
 const SearchPage = lazy(() => import('@/pages/SearchPage'))
+const FollowersPage = lazy(() => import('@/pages/FollowersPage'))
+const FollowingPage = lazy(() => import('@/pages/FollowingPage'))
 const OnboardingPage = lazy(() => import('@/pages/OnboardingPage'))
 const LoginPage = lazy(() => import('@/pages/LoginPage'))
 const SignupPage = lazy(() => import('@/pages/SignupPage'))
@@ -41,6 +43,8 @@ export const router = createBrowserRouter(
             { path: '/r/:slug/wiki/:wikiSlug', element: <WikiPagePage /> },
             { path: '/posts/:postId', element: <PostPage /> },
             { path: '/u/:username', element: <ProfilePage /> },
+            { path: '/u/:username/followers', element: <FollowersPage /> },
+            { path: '/u/:username/following', element: <FollowingPage /> },
             {
               element: <RequireAuth />,
               children: [

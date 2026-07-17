@@ -8,6 +8,7 @@ import { useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { subscribeToTable } from '@/services/realtime'
 import { getUserVotes } from '@/features/voting/api/votes'
+import { listFollowedUserIds } from '@/features/follows/api/follows'
 import type { Post } from '@/types/database'
 import {
   createPost,
@@ -40,16 +41,24 @@ function rankPage(posts: PostWithRelations[], sort: PostSort): PostWithRelations
   return posts
 }
 
-export function usePostsFeed(communityId: string | undefined, sort: PostSort) {
+export function usePostsFeed(
+  communityId: string | undefined,
+  sort: PostSort,
+  feedScope: 'all' | 'following' = 'all',
+) {
   const { user } = useAuth()
 
   return useInfiniteQuery({
-    queryKey: ['posts', communityId ?? 'global', sort, user?.id ?? 'anon'],
+    queryKey: ['posts', communityId ?? 'global', sort, feedScope, user?.id ?? 'anon'],
     queryFn: async ({
       pageParam,
     }): Promise<{ posts: PostWithVote[]; nextPage: number | null }> => {
+      const authorIds =
+        feedScope === 'following' && user ? await listFollowedUserIds(user.id) : undefined
+
       const result: ListPostsResult = await listPosts({
         communityId,
+        authorIds,
         sort,
         page: pageParam,
       })

@@ -67,6 +67,8 @@ export interface Profile {
   website: string | null
   social_links: Record<string, string>
   reputation_score: number
+  follower_count: number
+  following_count: number
   privacy_settings: {
     show_age?: boolean
     show_diagnosis?: boolean

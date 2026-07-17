@@ -7,6 +7,8 @@ const POST_SELECT =
 
 interface ListPostsParams {
   communityId?: string
+  /** Scopes the feed to these authors only (used for the "Following" feed). */
+  authorIds?: string[]
   sort: PostSort
   page: number
   pageSize?: number
@@ -19,10 +21,15 @@ export interface ListPostsResult {
 
 export async function listPosts({
   communityId,
+  authorIds,
   sort,
   page,
   pageSize = 15,
 }: ListPostsParams): Promise<ListPostsResult> {
+  if (authorIds && authorIds.length === 0) {
+    return { posts: [], nextPage: null }
+  }
+
   // Hot/controversial are re-ranked client-side (see features/posts/utils/ranking.ts), so
   // both pull a recency-bounded window from the DB rather than a true keyset order.
   let query = supabase
@@ -32,6 +39,7 @@ export async function listPosts({
     .order('position', { foreignTable: 'post_media' })
 
   if (communityId) query = query.eq('community_id', communityId)
+  if (authorIds) query = query.in('author_id', authorIds)
 
   const from = page * pageSize
   const to = from + pageSize - 1

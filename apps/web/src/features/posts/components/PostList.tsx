@@ -9,13 +9,15 @@ export function PostList({
   communityId,
   sort,
   showCommunity = true,
+  feedScope = 'all',
 }: {
   communityId?: string
   sort: PostSort
   showCommunity?: boolean
+  feedScope?: 'all' | 'following'
 }) {
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
-    usePostsFeed(communityId, sort)
+    usePostsFeed(communityId, sort, feedScope)
 
   const handleInView = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) void fetchNextPage()
@@ -38,7 +40,9 @@ export function PostList({
   if (posts.length === 0) {
     return (
       <p className="py-12 text-center text-sm text-muted-foreground">
-        No posts yet. Be the first to share something.
+        {feedScope === 'following'
+          ? 'Follow people to see their posts here.'
+          : 'No posts yet. Be the first to share something.'}
       </p>
     )
   }
