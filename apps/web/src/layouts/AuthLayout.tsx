@@ -10,7 +10,8 @@ export function AuthLayout() {
         <Outlet />
       </div>
       <p className="max-w-sm text-center text-xs text-muted-foreground">
-        A community for people living with chronic illness to find others who understand.
+        A community for people living with illness, in all its forms, to find others who
+        understand.
       </p>
     </div>
   )

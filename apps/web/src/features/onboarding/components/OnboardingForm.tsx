@@ -3,26 +3,15 @@ import { useNavigate } from 'react-router-dom'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQueryClient } from '@tanstack/react-query'
-import {
-  Button,
-  Input,
-  Label,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  Textarea,
-} from '@/components/ui'
+import { Button, Input, Label, Textarea } from '@/components/ui'
 import { useAuth } from '@/contexts/AuthContext'
 import { queryKeys } from '@/services/queryClient'
-import { useConditions } from '@/features/conditions/hooks/useConditions'
+import { ConditionSelect } from '@/features/conditions/components/ConditionSelect'
 import { onboardingSchema, type OnboardingValues } from '../schemas'
 import { completeOnboarding, isUsernameAvailable } from '../api/onboarding'
 
 export function OnboardingForm() {
   const { user, profile } = useAuth()
-  const { data: conditions } = useConditions()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [formError, setFormError] = useState<string | null>(null)
@@ -134,18 +123,12 @@ export function OnboardingForm() {
             control={control}
             name="diagnosisConditionId"
             render={({ field }) => (
-              <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger id="diagnosis">
-                  <SelectValue placeholder="Select condition" />
-                </SelectTrigger>
-                <SelectContent>
-                  {conditions?.map((condition) => (
-                    <SelectItem key={condition.id} value={condition.id}>
-                      {condition.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <ConditionSelect
+                id="diagnosis"
+                value={field.value}
+                onValueChange={field.onChange}
+                placeholder="Select condition"
+              />
             )}
           />
         </div>

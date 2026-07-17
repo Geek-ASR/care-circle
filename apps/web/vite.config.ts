@@ -20,7 +20,7 @@ export default defineConfig({
         name: 'CareCircle',
         short_name: 'CareCircle',
         description:
-          'A community platform where people living with chronic illness find others who understand, share experiences, and support each other.',
+          'A community platform where people living with illness, in all its forms, find others who understand, share experiences, and support each other.',
         theme_color: '#171513',
         background_color: '#171513',
         display: 'standalone',

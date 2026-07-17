@@ -2,15 +2,8 @@ import { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { ExternalLink } from 'lucide-react'
-import {
-  Badge,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  Skeleton,
-} from '@/components/ui'
+import { Badge, Skeleton } from '@/components/ui'
+import { ConditionSelect } from '@/features/conditions/components/ConditionSelect'
 import { useConditions } from '@/features/conditions/hooks/useConditions'
 import { useConditionResources } from '@/features/resources/hooks/useResources'
 import type { ResourceCategory } from '@/types/database'
@@ -51,23 +44,15 @@ export default function ResourcesPage() {
       {isLoadingConditions ? (
         <Skeleton className="h-10 max-w-xs" />
       ) : (
-        <Select
+        <ConditionSelect
           value={slug}
           onValueChange={(value) =>
             setSearchParams({ condition: value }, { replace: true })
           }
-        >
-          <SelectTrigger className="max-w-xs">
-            <SelectValue placeholder="Choose a condition" />
-          </SelectTrigger>
-          <SelectContent>
-            {conditions?.map((condition) => (
-              <SelectItem key={condition.id} value={condition.slug}>
-                {condition.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          placeholder="Choose a condition"
+          className="max-w-xs"
+          valueBy="slug"
+        />
       )}
 
       {!selectedCondition && !isLoadingConditions && (

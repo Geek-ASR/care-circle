@@ -11,6 +11,7 @@ import {
   useWikiPages,
 } from '@/features/communities/hooks/useCommunities'
 import { JoinLeaveButton } from '@/features/communities/components/JoinLeaveButton'
+import { getConditionCategory } from '@/features/conditions/constants'
 import { PostList } from '@/features/posts/components/PostList'
 import { PostSortTabs } from '@/features/posts/components/PostSortTabs'
 import type { PostSort } from '@/features/posts/types'
@@ -35,6 +36,8 @@ export default function CommunityPage() {
   }
 
   if (!community) return <NotFoundPage />
+
+  const conditionCategory = getConditionCategory(community.condition?.category ?? null)
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_280px]">
@@ -94,7 +97,8 @@ export default function CommunityPage() {
             )}
             <div className="mt-3 flex items-center gap-1 text-xs text-muted-foreground">
               <Users className="h-3.5 w-3.5" />
-              {community.member_count.toLocaleString()} members
+              {community.member_count.toLocaleString()}{' '}
+              {community.member_count === 1 ? 'member' : 'members'}
             </div>
           </div>
         </div>
@@ -182,7 +186,16 @@ export default function CommunityPage() {
         )}
 
         {community.condition && (
-          <div className="rounded-lg border border-border bg-surface p-4">
+          <div className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4">
+            {conditionCategory && (
+              <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-surface-hover px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                <conditionCategory.icon
+                  className="h-3.5 w-3.5 shrink-0"
+                  aria-hidden="true"
+                />
+                {conditionCategory.label}
+              </span>
+            )}
             <Link
               to={`/resources?condition=${community.condition.slug}`}
               className="flex items-center gap-1.5 text-sm text-foreground hover:text-primary"

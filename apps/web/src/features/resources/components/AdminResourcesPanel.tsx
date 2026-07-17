@@ -11,7 +11,7 @@ import {
   SelectValue,
   Skeleton,
 } from '@/components/ui'
-import { useConditions } from '@/features/conditions/hooks/useConditions'
+import { ConditionSelect } from '@/features/conditions/components/ConditionSelect'
 import {
   useConditionResources,
   useCreateConditionResource,
@@ -28,7 +28,6 @@ const CATEGORY_LABELS: Record<ResourceCategory, string> = {
 }
 
 export function AdminResourcesPanel() {
-  const { data: conditions } = useConditions()
   const [conditionId, setConditionId] = useState('')
   const [title, setTitle] = useState('')
   const [url, setUrl] = useState('')
@@ -53,18 +52,13 @@ export function AdminResourcesPanel() {
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="resource-condition">Condition</Label>
-        <Select value={conditionId} onValueChange={setConditionId}>
-          <SelectTrigger id="resource-condition" className="max-w-xs">
-            <SelectValue placeholder="Choose a condition" />
-          </SelectTrigger>
-          <SelectContent>
-            {conditions?.map((condition) => (
-              <SelectItem key={condition.id} value={condition.id}>
-                {condition.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <ConditionSelect
+          id="resource-condition"
+          value={conditionId}
+          onValueChange={setConditionId}
+          placeholder="Choose a condition"
+          className="max-w-xs"
+        />
       </div>
 
       {conditionId && (

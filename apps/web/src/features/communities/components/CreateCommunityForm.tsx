@@ -2,24 +2,13 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  Button,
-  Input,
-  Label,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  Textarea,
-} from '@/components/ui'
-import { useConditions } from '@/features/conditions/hooks/useConditions'
+import { Button, Input, Label, Textarea } from '@/components/ui'
+import { ConditionSelect } from '@/features/conditions/components/ConditionSelect'
 import { useCreateCommunity } from '../hooks/useCommunities'
 import { createCommunitySchema, slugify, type CreateCommunityValues } from '../schemas'
 
 export function CreateCommunityForm() {
   const navigate = useNavigate()
-  const { data: conditions } = useConditions()
   const createCommunity = useCreateCommunity()
   const [slugTouched, setSlugTouched] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
@@ -99,18 +88,12 @@ export function CreateCommunityForm() {
           control={control}
           name="conditionId"
           render={({ field }) => (
-            <Select value={field.value} onValueChange={field.onChange}>
-              <SelectTrigger id="condition">
-                <SelectValue placeholder="None" />
-              </SelectTrigger>
-              <SelectContent>
-                {conditions?.map((condition) => (
-                  <SelectItem key={condition.id} value={condition.id}>
-                    {condition.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <ConditionSelect
+              id="condition"
+              value={field.value}
+              onValueChange={field.onChange}
+              placeholder="None"
+            />
           )}
         />
       </div>

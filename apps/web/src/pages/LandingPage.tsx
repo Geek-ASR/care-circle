@@ -6,13 +6,35 @@ import { Button, Skeleton } from '@/components/ui'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { useCommunities } from '@/features/communities/hooks/useCommunities'
 import { CommunityCard } from '@/features/communities/components/CommunityCard'
+import { CategoryChip } from '@/features/conditions/components/CategoryChip'
+import { CONDITION_CATEGORIES } from '@/features/conditions/constants'
+
+const SHOWCASE_CATEGORY_VALUES = [
+  'autoimmune',
+  'oncology',
+  'mental_health',
+  'cardiovascular',
+  'neurological',
+  'respiratory',
+  'reproductive_health',
+  'sensory',
+  'mobility_disability',
+  'neurodevelopmental',
+  'sleep',
+  'substance_recovery',
+  'caregiver_support',
+  'rare_disease',
+]
+const SHOWCASE_CATEGORIES = CONDITION_CATEGORIES.filter((c) =>
+  SHOWCASE_CATEGORY_VALUES.includes(c.value),
+)
 
 const FEATURES = [
   {
     icon: HeartHandshake,
-    title: 'A community for every condition',
+    title: 'A community for every condition — not just chronic ones',
     description:
-      "Join spaces built specifically around your diagnosis — from Lupus to Long COVID to rare and undiagnosed conditions. If you don't see yours yet, more communities are added over time.",
+      'Join spaces built around your diagnosis — physical or mental, common or rare, lifelong or short-term. From Lupus to anxiety to cancer survivorship, if you don’t see yours yet, you can start it.',
   },
   {
     icon: MessagesSquare,
@@ -46,10 +68,10 @@ export default function LandingPage() {
   return (
     <div className="flex min-h-svh flex-col bg-background">
       <Helmet>
-        <title>CareCircle — find people who understand your illness</title>
+        <title>CareCircle — find people who understand what you're going through</title>
         <meta
           name="description"
-          content="CareCircle is a community platform for people living with chronic illness — every condition, not just one. Ask questions, share experiences, and connect with people who understand."
+          content="CareCircle is a community platform for people living with illness — physical or mental, chronic, acute, or rare. Ask questions, share experiences, and connect with people who understand."
         />
       </Helmet>
 
@@ -95,7 +117,7 @@ export default function LandingPage() {
               transition={{ duration: 0.4 }}
               className="rounded-full border border-border bg-surface px-3 py-1 text-xs font-medium text-muted-foreground"
             >
-              For every chronic illness — not just one
+              For every illness — chronic, acute, mental, or rare
             </motion.span>
             <motion.h1
               initial="hidden"
@@ -113,9 +135,9 @@ export default function LandingPage() {
               transition={{ duration: 0.4, delay: 0.1 }}
               className="max-w-xl text-balance text-base text-muted-foreground md:text-lg"
             >
-              CareCircle is a community platform for people living with chronic illness.
-              Ask questions, share what&apos;s worked, and connect with people who get it
-              — without having to explain from scratch.
+              CareCircle is a community platform for people living with illness, in all
+              its forms. Ask questions, share what&apos;s worked, and connect with people
+              who get it — without having to explain from scratch.
             </motion.p>
             <motion.div
               initial="hidden"
@@ -140,6 +162,33 @@ export default function LandingPage() {
             >
               Free to join. Browse anonymously — no account required.
             </motion.p>
+          </div>
+        </section>
+
+        {/* Category showcase */}
+        <section className="border-t border-border py-16">
+          <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
+            <div className="mb-8 flex flex-col items-center gap-2 text-center">
+              <h2 className="text-2xl font-semibold text-foreground md:text-3xl">
+                Not just chronic illness — every kind of health journey
+              </h2>
+              <p className="max-w-xl text-sm text-muted-foreground md:text-base">
+                Autoimmune, cancer, mental health, sensory, developmental, caregiving, and
+                more — browse by category to find your circle.
+              </p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-2">
+              {SHOWCASE_CATEGORIES.map((category) => (
+                <Link key={category.value} to={`/communities?category=${category.value}`}>
+                  <CategoryChip category={category} />
+                </Link>
+              ))}
+              <Link to="/communities">
+                <span className="inline-flex shrink-0 items-center rounded-full border border-border bg-surface px-3 py-1.5 text-sm font-medium text-primary hover:bg-surface-hover">
+                  See all categories →
+                </span>
+              </Link>
+            </div>
           </div>
         </section>
 
@@ -220,8 +269,8 @@ export default function LandingPage() {
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-2 px-4 text-center md:px-6">
           <span className="text-sm font-semibold text-foreground">CareCircle</span>
           <p className="text-xs text-muted-foreground">
-            A community for people living with chronic illness to find others who
-            understand.
+            A community for people living with illness, in all its forms, to find others
+            who understand.
           </p>
         </div>
       </footer>

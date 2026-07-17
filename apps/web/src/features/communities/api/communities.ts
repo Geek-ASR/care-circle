@@ -11,7 +11,7 @@ import type { CommunityWithCondition, MyCommunity } from '../types'
 export async function listCommunities(): Promise<CommunityWithCondition[]> {
   const { data, error } = await supabase
     .from('communities')
-    .select('*, condition:conditions(name, slug)')
+    .select('*, condition:conditions(name, slug, category)')
     .eq('is_approved', true)
     .order('member_count', { ascending: false })
 
@@ -30,7 +30,7 @@ export async function getCommunityBySlug(
 ): Promise<CommunityWithCondition | null> {
   const { data, error } = await supabase
     .from('communities')
-    .select('*, condition:conditions(name, slug)')
+    .select('*, condition:conditions(name, slug, category)')
     .eq('slug', slug)
     .maybeSingle()
 

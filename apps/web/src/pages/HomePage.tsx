@@ -12,7 +12,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col gap-4">
       <Helmet>
-        <title>CareCircle — communities for people living with chronic illness</title>
+        <title>CareCircle — communities for people living with illness</title>
       </Helmet>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-xl font-semibold text-foreground">Home</h1>
