@@ -16,6 +16,8 @@ const ProfilePage = lazy(() => import('@/pages/ProfilePage'))
 const SettingsPage = lazy(() => import('@/pages/SettingsPage'))
 const NotificationsPage = lazy(() => import('@/pages/NotificationsPage'))
 const SavedPostsPage = lazy(() => import('@/pages/SavedPostsPage'))
+const MessagesPage = lazy(() => import('@/pages/MessagesPage'))
+const ConversationPage = lazy(() => import('@/pages/ConversationPage'))
 const OnboardingPage = lazy(() => import('@/pages/OnboardingPage'))
 const LoginPage = lazy(() => import('@/pages/LoginPage'))
 const SignupPage = lazy(() => import('@/pages/SignupPage'))
@@ -44,6 +46,8 @@ export const router = createBrowserRouter(
                 { path: '/settings', element: <SettingsPage /> },
                 { path: '/notifications', element: <NotificationsPage /> },
                 { path: '/saved', element: <SavedPostsPage /> },
+                { path: '/messages', element: <MessagesPage /> },
+                { path: '/messages/:conversationId', element: <ConversationPage /> },
               ],
             },
           ],

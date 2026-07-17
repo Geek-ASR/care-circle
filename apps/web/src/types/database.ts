@@ -286,6 +286,8 @@ export interface Conversation {
   is_group: boolean
   community_id: UUID | null
   created_by: UUID | null
+  last_message_at: ISODateString | null
+  last_message_preview: string | null
   created_at: ISODateString
 }
 

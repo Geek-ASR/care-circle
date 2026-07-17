@@ -1,17 +1,21 @@
 import { useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { CalendarDays, Globe, MapPin } from 'lucide-react'
+import { CalendarDays, Globe, MapPin, MessageCircle } from 'lucide-react'
 import { format } from 'date-fns'
-import { Avatar, AvatarFallback, AvatarImage, Badge, Skeleton } from '@/components/ui'
+import { Avatar, AvatarFallback, AvatarImage, Badge, Button, Skeleton } from '@/components/ui'
+import { useAuth } from '@/contexts/AuthContext'
 import { useProfileByUsername } from '@/features/profile/hooks/useProfile'
 import { usePostsByAuthor } from '@/features/posts/hooks/usePosts'
 import { PostCard } from '@/features/posts/components/PostCard'
+import { useStartConversation } from '@/features/chat/hooks/useChat'
 import NotFoundPage from './NotFoundPage'
 
 export default function ProfilePage() {
   const { username } = useParams<{ username: string }>()
+  const { user } = useAuth()
   const { data: profile, isLoading } = useProfileByUsername(username)
   const { data: posts, isLoading: isLoadingPosts } = usePostsByAuthor(profile?.id)
+  const startConversation = useStartConversation()
 
   if (isLoading) {
     return (
@@ -50,12 +54,22 @@ export default function ProfilePage() {
             <AvatarImage src={profile.avatar_url ?? undefined} alt="" />
             <AvatarFallback className="text-lg">{initials}</AvatarFallback>
           </Avatar>
-          <div>
+          <div className="flex-1">
             <h1 className="text-xl font-semibold text-foreground">
               {profile.display_name ?? profile.username}
             </h1>
             <p className="text-sm text-muted-foreground">@{profile.username}</p>
           </div>
+          {user && user.id !== profile.id && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => startConversation.mutate(profile.id)}
+              disabled={startConversation.isPending}
+            >
+              <MessageCircle className="h-4 w-4" /> Message
+            </Button>
+          )}
         </div>
 
         {profile.bio ? (

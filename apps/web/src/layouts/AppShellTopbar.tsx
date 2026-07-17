@@ -5,6 +5,7 @@ import { Button, Input } from '@/components/ui'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { UserMenu } from '@/components/UserMenu'
 import { NotificationBell } from '@/features/notifications/components/NotificationBell'
+import { MessagesLink } from '@/features/chat/components/MessagesLink'
 import { useAuth } from '@/contexts/AuthContext'
 import { MobileNav } from './MobileNav'
 
@@ -62,6 +63,7 @@ export function AppShellTopbar() {
           </Link>
         </Button>
         <ThemeToggle />
+        <MessagesLink />
         <NotificationBell />
         <UserMenu />
       </div>

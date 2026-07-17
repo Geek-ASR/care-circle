@@ -10,12 +10,22 @@ interface TableChangeConfig {
   filter?: string
 }
 
+let subscriptionSequence = 0
+
 /**
  * Subscribes to Postgres change events on a single table/filter. Returns an
  * unsubscribe function — always call it in a `useEffect` cleanup.
  *
  * This is the only place `supabase.channel(...)` is called for table changes,
  * so the realtime transport can be swapped without touching feature code.
+ *
+ * The `channelName` argument is a human-readable topic, but the actual channel
+ * topic always gets a unique numeric suffix: supabase-js's `.channel(topic)`
+ * returns the SAME channel object whenever the exact topic string repeats, and
+ * calling `.on(...)` on a channel that has already `.subscribe()`d throws. Two
+ * components subscribing to the same logical topic at once (e.g. a topbar
+ * unread badge and the full page it links to, both watching
+ * `conversations:<uid>`) would otherwise crash the second subscriber.
  */
 export function subscribeToTable<T extends object>(
   channelName: string,
@@ -23,7 +33,7 @@ export function subscribeToTable<T extends object>(
   onChange: (payload: RealtimePostgresChangesPayload<T>) => void,
 ): () => void {
   const channel = supabase
-    .channel(channelName)
+    .channel(`${channelName}:${++subscriptionSequence}`)
     .on(
       'postgres_changes',
       { event, schema, table, ...(filter ? { filter } : {}) },
