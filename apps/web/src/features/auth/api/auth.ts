@@ -23,9 +23,13 @@ export async function signInWithEmail(email: string, password: string) {
 }
 
 export async function signInWithOAuth(provider: OAuthProvider) {
+  // Redirect to the app root, not straight to /onboarding: OAuth is used for both
+  // first-time signup AND every subsequent login, and RequireOnboarding already
+  // redirects new users to /onboarding for us. Hardcoding /onboarding here sent
+  // already-onboarded returning users back through the setup form on every login.
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
-    options: { redirectTo: redirectUrl('onboarding') },
+    options: { redirectTo: redirectUrl('') },
   })
   if (error) throw error
   return data

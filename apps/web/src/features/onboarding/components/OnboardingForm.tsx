@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -26,6 +26,15 @@ export function OnboardingForm() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [formError, setFormError] = useState<string | null>(null)
+
+  // Safety net: if someone who already finished onboarding lands here (stale link,
+  // browser back button, etc.), bounce them home instead of showing a form whose
+  // blank bio/diagnosis defaults would overwrite their existing profile on submit.
+  useEffect(() => {
+    if (profile?.onboarding_completed) {
+      navigate('/', { replace: true })
+    }
+  }, [profile?.onboarding_completed, navigate])
 
   const {
     register,
