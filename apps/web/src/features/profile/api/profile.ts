@@ -50,6 +50,17 @@ export async function updateProfile(userId: string, input: UpdateProfileInput) {
   if (error) throw error
 }
 
+export async function updateNotificationSettings(
+  userId: string,
+  settings: Record<string, boolean>,
+) {
+  const { error } = await supabase
+    .from('profiles')
+    .update({ notification_settings: settings })
+    .eq('id', userId)
+  if (error) throw error
+}
+
 export async function uploadAvatar(file: File, userId: string): Promise<string> {
   const extension = file.name.split('.').pop() ?? 'jpg'
   const path = `${userId}/avatar-${Date.now()}.${extension}`

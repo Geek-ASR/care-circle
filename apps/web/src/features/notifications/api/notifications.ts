@@ -13,7 +13,7 @@ interface CreateNotificationInput {
   userId: string
   actorId: string
   type: NotificationType
-  targetType: 'post' | 'comment'
+  targetType: 'post' | 'comment' | 'user'
   targetId: string
 }
 
@@ -23,9 +23,22 @@ interface CreateNotificationInput {
  * inserting client to name itself as `actor_id` — it can still write a row for a different
  * `user_id` (the recipient). This is the one place that INSERT happens; every action that
  * should notify someone calls this, wrapped so a failure here never blocks the action itself.
+ *
+ * Checks the recipient's notification_settings first (opt-out: an absent or `true` value
+ * means "notify", only an explicit `false` skips it) - profiles are publicly readable to
+ * authenticated callers, so this is a plain read, not a privileged check.
  */
 export async function createNotification(input: CreateNotificationInput) {
   if (input.userId === input.actorId) return // never notify yourself
+
+  const { data: recipient } = await supabase
+    .from('profiles')
+    .select('notification_settings')
+    .eq('id', input.userId)
+    .maybeSingle()
+
+  const settings = (recipient?.notification_settings ?? {}) as Record<string, boolean>
+  if (settings[input.type] === false) return
 
   const { error } = await supabase.from('notifications').insert({
     user_id: input.userId,

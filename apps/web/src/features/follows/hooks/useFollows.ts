@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/contexts/AuthContext'
 import { toast } from '@/store/toastStore'
+import { createNotification } from '@/features/notifications/api/notifications'
 import {
   followUser,
   isFollowing,
@@ -29,6 +30,13 @@ export function useToggleFollow(followeeId: string, username: string) {
         await unfollowUser(user!.id, followeeId)
       } else {
         await followUser(user!.id, followeeId)
+        await createNotification({
+          userId: followeeId,
+          actorId: user!.id,
+          type: 'follow',
+          targetType: 'user',
+          targetId: followeeId,
+        }).catch(() => {})
       }
     },
     onSuccess: () => {

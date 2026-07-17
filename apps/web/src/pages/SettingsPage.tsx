@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async'
 import { Label, Switch, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { ProfileSettingsForm } from '@/features/profile/components/ProfileSettingsForm'
+import { NotificationSettingsForm } from '@/features/notifications/components/NotificationSettingsForm'
 import { useThemeStore } from '@/store/themeStore'
 
 export default function SettingsPage() {
@@ -16,11 +17,16 @@ export default function SettingsPage() {
       <Tabs defaultValue="profile">
         <TabsList>
           <TabsTrigger value="profile">Profile</TabsTrigger>
+          <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="appearance">Appearance</TabsTrigger>
         </TabsList>
 
         <TabsContent value="profile">
           <ProfileSettingsForm />
+        </TabsContent>
+
+        <TabsContent value="notifications">
+          <NotificationSettingsForm />
         </TabsContent>
 
         <TabsContent value="appearance">

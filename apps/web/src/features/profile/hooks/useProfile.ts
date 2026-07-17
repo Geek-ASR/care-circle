@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { toast } from '@/store/toastStore'
 import {
   getProfileByUsername,
+  updateNotificationSettings,
   updateProfile,
   type UpdateProfileInput,
 } from '../api/profile'
@@ -32,6 +33,22 @@ export function useUpdateProfile() {
     },
     onError: () => {
       toast({ title: 'Could not update profile', variant: 'danger' })
+    },
+  })
+}
+
+export function useUpdateNotificationSettings() {
+  const { user } = useAuth()
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (settings: Record<string, boolean>) =>
+      updateNotificationSettings(user!.id, settings),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.profile(user!.id) })
+    },
+    onError: () => {
+      toast({ title: 'Could not update notification preferences', variant: 'danger' })
     },
   })
 }

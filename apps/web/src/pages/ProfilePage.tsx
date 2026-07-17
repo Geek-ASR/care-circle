@@ -16,6 +16,10 @@ import { usePostsByAuthor } from '@/features/posts/hooks/usePosts'
 import { PostCard } from '@/features/posts/components/PostCard'
 import { useStartConversation } from '@/features/chat/hooks/useChat'
 import { FollowButton } from '@/features/follows/components/FollowButton'
+import { useIsSiteAdmin } from '@/features/moderation/hooks/useModeration'
+import { BadgeList } from '@/features/badges/components/BadgeList'
+import { AwardBadgeDialog } from '@/features/badges/components/AwardBadgeDialog'
+import { AchievementList } from '@/features/achievements/components/AchievementList'
 import NotFoundPage from './NotFoundPage'
 
 export default function ProfilePage() {
@@ -24,6 +28,7 @@ export default function ProfilePage() {
   const { data: profile, isLoading } = useProfileByUsername(username)
   const { data: posts, isLoading: isLoadingPosts } = usePostsByAuthor(profile?.id)
   const startConversation = useStartConversation()
+  const { data: isAdmin } = useIsSiteAdmin()
 
   if (isLoading) {
     return (
@@ -79,6 +84,7 @@ export default function ProfilePage() {
               >
                 <MessageCircle className="h-4 w-4" /> Message
               </Button>
+              {isAdmin && <AwardBadgeDialog userId={profile.id} />}
             </div>
           )}
         </div>
@@ -135,7 +141,13 @@ export default function ProfilePage() {
             <Badge variant="success">Verified diagnosis</Badge>
           )}
         </div>
+
+        <div className="mt-3">
+          <BadgeList userId={profile.id} />
+        </div>
       </div>
+
+      <AchievementList userId={profile.id} showInProgress={user?.id === profile.id} />
 
       <div className="flex flex-col gap-3 border-t border-border pt-6">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
