@@ -360,6 +360,41 @@ export interface ReputationEvent {
   created_at: ISODateString
 }
 
+export interface SymptomEntry {
+  name: string
+  severity: number
+}
+
+export interface MedicationEntry {
+  name: string
+  dosage: string
+}
+
+export interface HealthLog {
+  id: UUID
+  user_id: UUID
+  logged_at: ISODateString
+  symptoms: SymptomEntry[]
+  medications: MedicationEntry[]
+  mood: number | null
+  notes: string | null
+  created_at: ISODateString
+  updated_at: ISODateString
+}
+
+export type ResourceCategory =
+  'hotline' | 'organization' | 'research' | 'financial_assistance' | 'other'
+
+export interface ConditionResource {
+  id: UUID
+  condition_id: UUID
+  title: string
+  url: string | null
+  description: string | null
+  category: ResourceCategory | null
+  created_at: ISODateString
+}
+
 export interface Report {
   id: UUID
   reporter_id: UUID | null

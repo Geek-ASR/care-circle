@@ -25,15 +25,17 @@ export async function listCommunities(): Promise<CommunityWithCondition[]> {
  * this needs to return that row so the "your community is pending approval" state
  * can render instead of a 404.
  */
-export async function getCommunityBySlug(slug: string): Promise<Community | null> {
+export async function getCommunityBySlug(
+  slug: string,
+): Promise<CommunityWithCondition | null> {
   const { data, error } = await supabase
     .from('communities')
-    .select('*')
+    .select('*, condition:conditions(name, slug)')
     .eq('slug', slug)
     .maybeSingle()
 
   if (error) throw error
-  return data
+  return data as unknown as CommunityWithCondition | null
 }
 
 export interface CreateCommunityInput {

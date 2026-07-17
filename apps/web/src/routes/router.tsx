@@ -23,6 +23,8 @@ const FollowersPage = lazy(() => import('@/pages/FollowersPage'))
 const FollowingPage = lazy(() => import('@/pages/FollowingPage'))
 const CreateCommunityPage = lazy(() => import('@/pages/CreateCommunityPage'))
 const ModerationPage = lazy(() => import('@/pages/ModerationPage'))
+const ResourcesPage = lazy(() => import('@/pages/ResourcesPage'))
+const HealthTrackerPage = lazy(() => import('@/pages/HealthTrackerPage'))
 const OnboardingPage = lazy(() => import('@/pages/OnboardingPage'))
 const LoginPage = lazy(() => import('@/pages/LoginPage'))
 const SignupPage = lazy(() => import('@/pages/SignupPage'))
@@ -41,6 +43,7 @@ export const router = createBrowserRouter(
           children: [
             { path: '/communities', element: <CommunitiesPage /> },
             { path: '/search', element: <SearchPage /> },
+            { path: '/resources', element: <ResourcesPage /> },
             { path: '/r/:slug', element: <CommunityPage /> },
             { path: '/r/:slug/wiki/:wikiSlug', element: <WikiPagePage /> },
             { path: '/posts/:postId', element: <PostPage /> },
@@ -58,6 +61,7 @@ export const router = createBrowserRouter(
                 { path: '/messages/:conversationId', element: <ConversationPage /> },
                 { path: '/communities/new', element: <CreateCommunityPage /> },
                 { path: '/moderation', element: <ModerationPage /> },
+                { path: '/tracker', element: <HealthTrackerPage /> },
               ],
             },
           ],

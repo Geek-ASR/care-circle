@@ -3,6 +3,7 @@ import { Skeleton, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components
 import { useIsModerator } from '@/features/moderation/hooks/useModeration'
 import { ReportQueue } from '@/features/moderation/components/ReportQueue'
 import { PendingCommunitiesQueue } from '@/features/moderation/components/PendingCommunitiesQueue'
+import { AdminResourcesPanel } from '@/features/resources/components/AdminResourcesPanel'
 
 export default function ModerationPage() {
   const { isModerator, isAdmin, isLoading } = useIsModerator()
@@ -33,12 +34,16 @@ export default function ModerationPage() {
           <TabsList>
             <TabsTrigger value="reports">Reports</TabsTrigger>
             <TabsTrigger value="communities">Pending communities</TabsTrigger>
+            <TabsTrigger value="resources">Resources</TabsTrigger>
           </TabsList>
           <TabsContent value="reports" className="mt-4">
             <ReportQueue />
           </TabsContent>
           <TabsContent value="communities" className="mt-4">
             <PendingCommunitiesQueue />
+          </TabsContent>
+          <TabsContent value="resources" className="mt-4">
+            <AdminResourcesPanel />
           </TabsContent>
         </Tabs>
       )}

@@ -180,6 +180,18 @@ export default function CommunityPage() {
             </ul>
           </div>
         )}
+
+        {community.condition && (
+          <div className="rounded-lg border border-border bg-surface p-4">
+            <Link
+              to={`/resources?condition=${community.condition.slug}`}
+              className="flex items-center gap-1.5 text-sm text-foreground hover:text-primary"
+            >
+              <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+              {community.condition.name} resources
+            </Link>
+          </div>
+        )}
       </aside>
     </div>
   )
