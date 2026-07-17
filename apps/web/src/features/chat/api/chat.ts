@@ -21,14 +21,18 @@ export async function listConversations(userId: string): Promise<ConversationSum
 
   const conversationIds = rows.map((row) => row.conversation_id)
 
-  const [{ data: participantRows, error: participantsError }, { data: unreadRows, error: unreadError }] =
-    await Promise.all([
-      supabase
-        .from('conversation_participants')
-        .select(`conversation_id, user_id, profile:profiles!conversation_participants_user_id_fkey(${PARTICIPANT_COLUMNS})`)
-        .in('conversation_id', conversationIds),
-      supabase.rpc('get_unread_message_counts'),
-    ])
+  const [
+    { data: participantRows, error: participantsError },
+    { data: unreadRows, error: unreadError },
+  ] = await Promise.all([
+    supabase
+      .from('conversation_participants')
+      .select(
+        `conversation_id, user_id, profile:profiles!conversation_participants_user_id_fkey(${PARTICIPANT_COLUMNS})`,
+      )
+      .in('conversation_id', conversationIds),
+    supabase.rpc('get_unread_message_counts'),
+  ])
   if (participantsError) throw participantsError
   if (unreadError) throw unreadError
 
@@ -53,7 +57,10 @@ export async function listConversations(userId: string): Promise<ConversationSum
 
   return rows
     .map((row) => ({
-      ...(row.conversations as Omit<ConversationSummary, 'otherParticipants' | 'unreadCount'>),
+      ...(row.conversations as Omit<
+        ConversationSummary,
+        'otherParticipants' | 'unreadCount'
+      >),
       otherParticipants: otherParticipantsByConversation.get(row.conversation_id) ?? [],
       unreadCount: unreadByConversation.get(row.conversation_id) ?? 0,
     }))
@@ -70,7 +77,9 @@ export async function getConversationParticipants(
 ): Promise<ChatParticipant[]> {
   const { data, error } = await supabase
     .from('conversation_participants')
-    .select(`user_id, profile:profiles!conversation_participants_user_id_fkey(${PARTICIPANT_COLUMNS})`)
+    .select(
+      `user_id, profile:profiles!conversation_participants_user_id_fkey(${PARTICIPANT_COLUMNS})`,
+    )
     .eq('conversation_id', conversationId)
   if (error) throw error
 
@@ -89,7 +98,11 @@ export async function listMessages(conversationId: string): Promise<MessageWithS
   return data as unknown as MessageWithSender[]
 }
 
-export async function sendMessage(conversationId: string, senderId: string, body: string) {
+export async function sendMessage(
+  conversationId: string,
+  senderId: string,
+  body: string,
+) {
   const { error } = await supabase
     .from('messages')
     .insert({ conversation_id: conversationId, sender_id: senderId, body })
@@ -105,7 +118,9 @@ export async function markConversationRead(conversationId: string, userId: strin
   if (error) throw error
 }
 
-export async function getOrCreateDirectConversation(otherUserId: string): Promise<string> {
+export async function getOrCreateDirectConversation(
+  otherUserId: string,
+): Promise<string> {
   const { data, error } = await supabase.rpc('get_or_create_direct_conversation', {
     p_other_user_id: otherUserId,
   })

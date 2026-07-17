@@ -26,7 +26,8 @@ export default function MessagesPage() {
         <div className="flex flex-col items-center gap-2 py-16 text-center text-muted-foreground">
           <MessageCircle className="h-8 w-8" aria-hidden="true" />
           <p className="text-sm">
-            No conversations yet. Visit someone&apos;s profile and tap Message to start one.
+            No conversations yet. Visit someone&apos;s profile and tap Message to start
+            one.
           </p>
         </div>
       )}

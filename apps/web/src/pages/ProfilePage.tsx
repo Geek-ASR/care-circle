@@ -2,7 +2,14 @@ import { useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { CalendarDays, Globe, MapPin, MessageCircle } from 'lucide-react'
 import { format } from 'date-fns'
-import { Avatar, AvatarFallback, AvatarImage, Badge, Button, Skeleton } from '@/components/ui'
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Badge,
+  Button,
+  Skeleton,
+} from '@/components/ui'
 import { useAuth } from '@/contexts/AuthContext'
 import { useProfileByUsername } from '@/features/profile/hooks/useProfile'
 import { usePostsByAuthor } from '@/features/posts/hooks/usePosts'

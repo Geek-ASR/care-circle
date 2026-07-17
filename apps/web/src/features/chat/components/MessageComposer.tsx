@@ -40,7 +40,12 @@ export function MessageComposer({
         rows={1}
         aria-label="Message"
       />
-      <Button type="submit" size="icon" disabled={!body.trim() || isSending} aria-label="Send">
+      <Button
+        type="submit"
+        size="icon"
+        disabled={!body.trim() || isSending}
+        aria-label="Send"
+      >
         <Send className="h-4 w-4" />
       </Button>
     </form>

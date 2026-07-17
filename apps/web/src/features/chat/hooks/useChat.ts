@@ -63,13 +63,19 @@ export function useConversationMessages(conversationId: string | undefined) {
     if (!conversationId) return
     return subscribeToTable<Message>(
       `messages:${conversationId}`,
-      { table: 'messages', event: 'INSERT', filter: `conversation_id=eq.${conversationId}` },
+      {
+        table: 'messages',
+        event: 'INSERT',
+        filter: `conversation_id=eq.${conversationId}`,
+      },
       () => {
         void queryClient.invalidateQueries({
           queryKey: queryKeys.conversationMessages(conversationId),
         })
         if (user?.id) {
-          void queryClient.invalidateQueries({ queryKey: queryKeys.conversations(user.id) })
+          void queryClient.invalidateQueries({
+            queryKey: queryKeys.conversations(user.id),
+          })
         }
       },
     )

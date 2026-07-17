@@ -4,7 +4,11 @@ import { Avatar, AvatarFallback, AvatarImage, Badge } from '@/components/ui'
 import { cn } from '@/utils/cn'
 import type { ConversationSummary } from '../types'
 
-export function ConversationListItem({ conversation }: { conversation: ConversationSummary }) {
+export function ConversationListItem({
+  conversation,
+}: {
+  conversation: ConversationSummary
+}) {
   const other = conversation.otherParticipants[0]
   const name = other?.display_name ?? other?.username ?? 'Deleted user'
   const initials = name.charAt(0).toUpperCase()
