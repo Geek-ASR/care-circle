@@ -1,7 +1,9 @@
 import { Helmet } from 'react-helmet-async'
 import { Label, Switch, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { ProfileSettingsForm } from '@/features/profile/components/ProfileSettingsForm'
+import { PrivacySettingsForm } from '@/features/profile/components/PrivacySettingsForm'
 import { NotificationSettingsForm } from '@/features/notifications/components/NotificationSettingsForm'
+import { BlockedUsersList } from '@/features/blocks/components/BlockedUsersList'
 import { useThemeStore } from '@/store/themeStore'
 
 export default function SettingsPage() {
@@ -17,12 +19,23 @@ export default function SettingsPage() {
       <Tabs defaultValue="profile">
         <TabsList>
           <TabsTrigger value="profile">Profile</TabsTrigger>
+          <TabsTrigger value="privacy">Privacy</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="appearance">Appearance</TabsTrigger>
         </TabsList>
 
         <TabsContent value="profile">
           <ProfileSettingsForm />
+        </TabsContent>
+
+        <TabsContent value="privacy" className="flex flex-col gap-6">
+          <PrivacySettingsForm />
+          <div>
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Blocked users
+            </h2>
+            <BlockedUsersList />
+          </div>
         </TabsContent>
 
         <TabsContent value="notifications">

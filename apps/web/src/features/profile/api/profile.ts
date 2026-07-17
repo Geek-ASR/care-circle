@@ -1,23 +1,23 @@
 import { supabase } from '@/services/supabaseClient'
 import type { Profile } from '@/types/database'
 
-export type PublicProfile = Omit<Profile, 'privacy_settings' | 'notification_settings'>
+export type PublicProfile = Omit<
+  Profile,
+  'privacy_settings' | 'notification_settings' | 'gender'
+>
 
-const PUBLIC_COLUMNS =
-  'id, username, display_name, avatar_url, banner_url, verified_diagnosis, reputation_score, follower_count, following_count, theme_preference, onboarding_completed, created_at, updated_at'
-
-// Diagnosis/bio/age/gender/country/website/social_links are revoked at the column
-// level from the `anon` role (see supabase/migrations/20260101000011_security_hardening.sql)
-// — an anonymous viewer's request must not ask for them, or the query fails outright.
-const AUTHENTICATED_COLUMNS = `${PUBLIC_COLUMNS}, bio, country, age, gender, diagnosis_condition_id, diagnosis_year, website, social_links`
-
+/**
+ * Reads from profile_public_view (supabase/migrations/20260101000020_privacy_and_blocks.sql)
+ * instead of the profiles table directly - the view enforces profile_visibility,
+ * show_age/show_diagnosis, and the anon column revoke entirely in Postgres, so this
+ * no longer needs to know which columns are safe to ask for based on who's asking.
+ */
 export async function getProfileByUsername(
   username: string,
-  isViewerAuthenticated: boolean,
 ): Promise<PublicProfile | null> {
   const { data, error } = await supabase
-    .from('profiles')
-    .select(isViewerAuthenticated ? AUTHENTICATED_COLUMNS : PUBLIC_COLUMNS)
+    .from('profile_public_view')
+    .select('*')
     .eq('username', username)
     .maybeSingle()
 
@@ -47,6 +47,20 @@ export async function updateProfile(userId: string, input: UpdateProfileInput) {
     })
     .eq('id', userId)
 
+  if (error) throw error
+}
+
+export interface PrivacySettings {
+  show_age?: boolean
+  show_diagnosis?: boolean
+  profile_visibility?: 'public' | 'members_only' | 'private'
+}
+
+export async function updatePrivacySettings(userId: string, settings: PrivacySettings) {
+  const { error } = await supabase
+    .from('profiles')
+    .update({ privacy_settings: settings })
+    .eq('id', userId)
   if (error) throw error
 }
 

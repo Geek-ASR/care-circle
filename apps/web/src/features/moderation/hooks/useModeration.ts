@@ -9,6 +9,7 @@ import {
 } from '@/features/posts/api/posts'
 import {
   approveCommunity,
+  getAdminStats,
   isSiteAdmin,
   listModeratedCommunityIds,
   listPendingCommunities,
@@ -196,5 +197,13 @@ export function useRejectCommunity() {
     onError: () => {
       toast({ title: 'Could not reject community', variant: 'danger' })
     },
+  })
+}
+
+export function useAdminStats() {
+  return useQuery({
+    queryKey: ['moderation', 'admin-stats'],
+    queryFn: getAdminStats,
+    staleTime: 30_000,
   })
 }

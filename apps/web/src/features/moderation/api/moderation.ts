@@ -165,3 +165,65 @@ export async function rejectCommunity(communityId: string) {
   const { error } = await supabase.from('communities').delete().eq('id', communityId)
   if (error) throw error
 }
+
+export interface AdminStats {
+  users: number
+  posts: number
+  comments: number
+  approvedCommunities: number
+  pendingCommunities: number
+  pendingReports: number
+}
+
+export async function getAdminStats(): Promise<AdminStats> {
+  const [
+    usersRes,
+    postsRes,
+    commentsRes,
+    approvedCommunitiesRes,
+    pendingCommunitiesRes,
+    pendingReportsRes,
+  ] = await Promise.all([
+    supabase.from('profiles').select('id', { count: 'exact', head: true }),
+    supabase
+      .from('posts')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'published'),
+    supabase
+      .from('comments')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'published'),
+    supabase
+      .from('communities')
+      .select('id', { count: 'exact', head: true })
+      .eq('is_approved', true),
+    supabase
+      .from('communities')
+      .select('id', { count: 'exact', head: true })
+      .eq('is_approved', false),
+    supabase
+      .from('reports')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'pending'),
+  ])
+
+  for (const res of [
+    usersRes,
+    postsRes,
+    commentsRes,
+    approvedCommunitiesRes,
+    pendingCommunitiesRes,
+    pendingReportsRes,
+  ]) {
+    if (res.error) throw res.error
+  }
+
+  return {
+    users: usersRes.count ?? 0,
+    posts: postsRes.count ?? 0,
+    comments: commentsRes.count ?? 0,
+    approvedCommunities: approvedCommunitiesRes.count ?? 0,
+    pendingCommunities: pendingCommunitiesRes.count ?? 0,
+    pendingReports: pendingReportsRes.count ?? 0,
+  }
+}

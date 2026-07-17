@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async'
 import { Skeleton, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { useIsModerator } from '@/features/moderation/hooks/useModeration'
+import { AdminOverview } from '@/features/moderation/components/AdminOverview'
 import { ReportQueue } from '@/features/moderation/components/ReportQueue'
 import { PendingCommunitiesQueue } from '@/features/moderation/components/PendingCommunitiesQueue'
 import { AdminResourcesPanel } from '@/features/resources/components/AdminResourcesPanel'
@@ -30,12 +31,16 @@ export default function ModerationPage() {
       {!isLoading && isModerator && !isAdmin && <ReportQueue />}
 
       {!isLoading && isAdmin && (
-        <Tabs defaultValue="reports">
+        <Tabs defaultValue="overview">
           <TabsList>
+            <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="reports">Reports</TabsTrigger>
             <TabsTrigger value="communities">Pending communities</TabsTrigger>
             <TabsTrigger value="resources">Resources</TabsTrigger>
           </TabsList>
+          <TabsContent value="overview" className="mt-4">
+            <AdminOverview />
+          </TabsContent>
           <TabsContent value="reports" className="mt-4">
             <ReportQueue />
           </TabsContent>

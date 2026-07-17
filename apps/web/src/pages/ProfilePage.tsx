@@ -16,6 +16,7 @@ import { usePostsByAuthor } from '@/features/posts/hooks/usePosts'
 import { PostCard } from '@/features/posts/components/PostCard'
 import { useStartConversation } from '@/features/chat/hooks/useChat'
 import { FollowButton } from '@/features/follows/components/FollowButton'
+import { BlockButton } from '@/features/blocks/components/BlockButton'
 import { useIsSiteAdmin } from '@/features/moderation/hooks/useModeration'
 import { BadgeList } from '@/features/badges/components/BadgeList'
 import { AwardBadgeDialog } from '@/features/badges/components/AwardBadgeDialog'
@@ -85,6 +86,7 @@ export default function ProfilePage() {
                 <MessageCircle className="h-4 w-4" /> Message
               </Button>
               {isAdmin && <AwardBadgeDialog userId={profile.id} />}
+              <BlockButton userId={profile.id} />
             </div>
           )}
         </div>
