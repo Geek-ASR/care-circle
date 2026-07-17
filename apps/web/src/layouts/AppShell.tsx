@@ -1,8 +1,16 @@
+import type { ReactNode } from 'react'
 import { Outlet } from 'react-router-dom'
 import { AppShellSidebar } from './AppShellSidebar'
 import { AppShellTopbar } from './AppShellTopbar'
 
-export function AppShell() {
+interface AppShellProps {
+  // Normally used as a react-router layout route (renders <Outlet/>). RootRoute also
+  // composes it directly with explicit children for the signed-in "/" feed, since that
+  // path needs to pick between this shell and the anonymous landing page at the same URL.
+  children?: ReactNode
+}
+
+export function AppShell({ children }: AppShellProps) {
   return (
     <div className="flex min-h-svh flex-col bg-background">
       <a
@@ -15,7 +23,7 @@ export function AppShell() {
       <div className="mx-auto flex w-full max-w-6xl flex-1">
         <AppShellSidebar />
         <main className="min-w-0 flex-1 px-4 py-6 md:px-6" id="main-content">
-          <Outlet />
+          {children ?? <Outlet />}
         </main>
       </div>
     </div>

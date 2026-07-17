@@ -6,7 +6,7 @@ import { RequireAuth } from '@/components/RequireAuth'
 import { RequireOnboarding } from '@/components/RequireOnboarding'
 
 // Route-level code splitting: each page ships as its own chunk, fetched on navigation.
-const HomePage = lazy(() => import('@/pages/HomePage'))
+const RootRoute = lazy(() => import('@/pages/RootRoute'))
 const CommunitiesPage = lazy(() => import('@/pages/CommunitiesPage'))
 const CommunityPage = lazy(() => import('@/pages/CommunityPage'))
 const PostPage = lazy(() => import('@/pages/PostPage'))
@@ -26,10 +26,10 @@ export const router = createBrowserRouter(
     {
       element: <RequireOnboarding />,
       children: [
+        { path: '/', element: <RootRoute /> },
         {
           element: <AppShell />,
           children: [
-            { path: '/', element: <HomePage /> },
             { path: '/communities', element: <CommunitiesPage /> },
             { path: '/r/:slug', element: <CommunityPage /> },
             { path: '/posts/:postId', element: <PostPage /> },
