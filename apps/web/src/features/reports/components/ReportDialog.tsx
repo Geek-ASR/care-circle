@@ -21,7 +21,7 @@ import { toast } from '@/store/toastStore'
 import type { ReportReason, ReportTargetType } from '@/types/database'
 import { useCreateReport } from '../hooks/useReports'
 
-const REASON_LABELS: Record<ReportReason, string> = {
+export const REASON_LABELS: Record<ReportReason, string> = {
   spam: 'Spam',
   abuse: 'Abusive or hateful content',
   harassment: 'Harassment or bullying',

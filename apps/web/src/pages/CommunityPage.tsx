@@ -43,6 +43,13 @@ export default function CommunityPage() {
         <meta name="description" content={community.description ?? undefined} />
       </Helmet>
 
+      {!community.is_approved && (
+        <div className="rounded-lg border border-warning/40 bg-warning/10 p-3 text-sm text-foreground lg:col-span-2">
+          This community is pending admin approval and isn&apos;t visible to other members
+          yet. Only you can see it right now.
+        </div>
+      )}
+
       <div className="flex flex-col gap-4">
         <div className="overflow-hidden rounded-lg border border-border bg-surface">
           {community.banner_url && (

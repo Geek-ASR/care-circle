@@ -1,8 +1,9 @@
 import { NavLink } from 'react-router-dom'
-import { Compass, Home } from 'lucide-react'
+import { Compass, Home, Shield } from 'lucide-react'
 import { cn } from '@/utils/cn'
 import { useAuth } from '@/contexts/AuthContext'
 import { useMyCommunities } from '@/features/communities/hooks/useCommunities'
+import { useIsModerator } from '@/features/moderation/hooks/useModeration'
 import { Skeleton } from '@/components/ui'
 
 export const navLinkClasses = ({ isActive }: { isActive: boolean }) =>
@@ -21,6 +22,7 @@ export const navLinkClasses = ({ isActive }: { isActive: boolean }) =>
 export function AppShellNavLinks({ onNavigate }: { onNavigate?: () => void }) {
   const { user } = useAuth()
   const { data: myCommunities, isLoading } = useMyCommunities()
+  const { isModerator } = useIsModerator()
 
   return (
     <>
@@ -33,6 +35,12 @@ export function AppShellNavLinks({ onNavigate }: { onNavigate?: () => void }) {
           <Compass className="h-4 w-4" aria-hidden="true" />
           Browse communities
         </NavLink>
+        {isModerator && (
+          <NavLink to="/moderation" className={navLinkClasses} onClick={onNavigate}>
+            <Shield className="h-4 w-4" aria-hidden="true" />
+            Moderation
+          </NavLink>
+        )}
       </div>
 
       {user && (

@@ -3,6 +3,7 @@ import { queryKeys } from '@/services/queryClient'
 import { useAuth } from '@/contexts/AuthContext'
 import { toast } from '@/store/toastStore'
 import {
+  createCommunity,
   getCommunityBySlug,
   getMembership,
   getWikiPage,
@@ -13,6 +14,7 @@ import {
   listCommunityRules,
   listMyCommunities,
   listWikiPages,
+  type CreateCommunityInput,
 } from '../api/communities'
 
 export function useCommunities() {
@@ -125,6 +127,20 @@ export function useLeaveCommunity(communityId: string) {
         description: 'Please try again in a moment.',
         variant: 'danger',
       })
+    },
+  })
+}
+
+export function useCreateCommunity() {
+  const { user } = useAuth()
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (input: Omit<CreateCommunityInput, 'createdBy'>) =>
+      createCommunity({ ...input, createdBy: user!.id }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.communities() })
+      void queryClient.invalidateQueries({ queryKey: ['communities', 'mine'] })
     },
   })
 }

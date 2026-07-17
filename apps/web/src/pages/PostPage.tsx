@@ -14,6 +14,7 @@ import { PollVoting } from '@/features/polls/components/PollVoting'
 import { CommentThread } from '@/features/comments/components/CommentThread'
 import { BookmarkButton } from '@/features/bookmarks/components/BookmarkButton'
 import { ReportDialog } from '@/features/reports/components/ReportDialog'
+import { ModeratorPostActions } from '@/features/moderation/components/ModeratorPostActions'
 import { useAuth } from '@/contexts/AuthContext'
 import {
   usePost,
@@ -180,6 +181,13 @@ export default function PostPage() {
                 <BookmarkButton postId={post.id} />
                 {!isOwner && <ReportDialog targetType="post" targetId={post.id} />}
               </div>
+
+              <ModeratorPostActions
+                postId={post.id}
+                communityId={post.community_id}
+                isPinned={post.is_pinned}
+                isLocked={post.is_locked}
+              />
 
               {isOwner && (
                 <div className="mt-3 flex items-center gap-3 text-xs text-muted-foreground">

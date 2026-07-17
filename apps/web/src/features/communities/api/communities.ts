@@ -19,16 +19,47 @@ export async function listCommunities(): Promise<CommunityWithCondition[]> {
   return data as unknown as CommunityWithCondition[]
 }
 
+/**
+ * No is_approved filter here: RLS (communities_select_scoped) already allows an
+ * unapproved community's creator/moderators/admins to see it pending review, and
+ * this needs to return that row so the "your community is pending approval" state
+ * can render instead of a 404.
+ */
 export async function getCommunityBySlug(slug: string): Promise<Community | null> {
   const { data, error } = await supabase
     .from('communities')
     .select('*')
     .eq('slug', slug)
-    .eq('is_approved', true)
     .maybeSingle()
 
   if (error) throw error
   return data
+}
+
+export interface CreateCommunityInput {
+  name: string
+  slug: string
+  description: string
+  conditionId: string | null
+  createdBy: string
+}
+
+export async function createCommunity(input: CreateCommunityInput): Promise<Community> {
+  const { data, error } = await supabase
+    .from('communities')
+    .insert({
+      name: input.name,
+      slug: input.slug,
+      description: input.description || null,
+      condition_id: input.conditionId,
+      created_by: input.createdBy,
+      is_approved: false,
+    })
+    .select('*')
+    .single()
+
+  if (error) throw error
+  return data as Community
 }
 
 export async function listMyCommunities(userId: string): Promise<MyCommunity[]> {

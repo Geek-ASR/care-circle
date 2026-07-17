@@ -1,12 +1,14 @@
 import { useMemo } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { Search } from 'lucide-react'
-import { Input, Skeleton } from '@/components/ui'
+import { Plus, Search } from 'lucide-react'
+import { Button, Input, Skeleton } from '@/components/ui'
+import { useAuth } from '@/contexts/AuthContext'
 import { useCommunities } from '@/features/communities/hooks/useCommunities'
 import { CommunityCard } from '@/features/communities/components/CommunityCard'
 
 export default function CommunitiesPage() {
+  const { user } = useAuth()
   const { data: communities, isLoading } = useCommunities()
   const [searchParams, setSearchParams] = useSearchParams()
   const rawQuery = searchParams.get('q') ?? ''
@@ -27,11 +29,20 @@ export default function CommunitiesPage() {
       <Helmet>
         <title>Browse communities · CareCircle</title>
       </Helmet>
-      <div>
-        <h1 className="text-2xl font-semibold text-foreground">Browse communities</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Find people who understand what you&apos;re going through.
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold text-foreground">Browse communities</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Find people who understand what you&apos;re going through.
+          </p>
+        </div>
+        {user && (
+          <Button asChild size="sm" variant="outline">
+            <Link to="/communities/new">
+              <Plus className="h-4 w-4" /> Create community
+            </Link>
+          </Button>
+        )}
       </div>
 
       <div className="relative max-w-md">

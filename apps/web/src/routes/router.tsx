@@ -21,6 +21,8 @@ const ConversationPage = lazy(() => import('@/pages/ConversationPage'))
 const SearchPage = lazy(() => import('@/pages/SearchPage'))
 const FollowersPage = lazy(() => import('@/pages/FollowersPage'))
 const FollowingPage = lazy(() => import('@/pages/FollowingPage'))
+const CreateCommunityPage = lazy(() => import('@/pages/CreateCommunityPage'))
+const ModerationPage = lazy(() => import('@/pages/ModerationPage'))
 const OnboardingPage = lazy(() => import('@/pages/OnboardingPage'))
 const LoginPage = lazy(() => import('@/pages/LoginPage'))
 const SignupPage = lazy(() => import('@/pages/SignupPage'))
@@ -54,6 +56,8 @@ export const router = createBrowserRouter(
                 { path: '/saved', element: <SavedPostsPage /> },
                 { path: '/messages', element: <MessagesPage /> },
                 { path: '/messages/:conversationId', element: <ConversationPage /> },
+                { path: '/communities/new', element: <CreateCommunityPage /> },
+                { path: '/moderation', element: <ModerationPage /> },
               ],
             },
           ],
