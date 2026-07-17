@@ -9,6 +9,8 @@ import { MarkdownContent } from '@/components/MarkdownContent'
 import { MarkdownEditor } from '@/components/MarkdownEditor'
 import { VoteControl } from '@/features/voting/components/VoteControl'
 import { PostTypeBadge } from '@/features/posts/components/PostTypeBadge'
+import { StarRating } from '@/features/posts/components/StarRating'
+import { PollVoting } from '@/features/polls/components/PollVoting'
 import { CommentThread } from '@/features/comments/components/CommentThread'
 import { BookmarkButton } from '@/features/bookmarks/components/BookmarkButton'
 import { ReportDialog } from '@/features/reports/components/ReportDialog'
@@ -134,6 +136,7 @@ export default function PostPage() {
 
               <div className="mt-1.5 flex flex-wrap items-center gap-2">
                 <PostTypeBadge postType={post.post_type} />
+                {post.rating != null && <StarRating value={post.rating} size="sm" />}
                 {post.is_nsfw && <Badge variant="danger">NSFW</Badge>}
                 {post.is_spoiler && <Badge variant="warning">Spoiler</Badge>}
                 {post.is_locked && <Badge variant="outline">Locked</Badge>}
@@ -143,6 +146,12 @@ export default function PostPage() {
                   </Badge>
                 ))}
               </div>
+
+              {post.post_type === 'poll' && (
+                <div className="mt-3">
+                  <PollVoting postId={post.id} />
+                </div>
+              )}
 
               {post.post_type === 'link' && post.url && (
                 <a

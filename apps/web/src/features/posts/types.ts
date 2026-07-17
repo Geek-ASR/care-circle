@@ -27,6 +27,7 @@ export interface CreatePostInput {
   title: string
   body?: string
   url?: string
+  rating?: number
   isNsfw?: boolean
   isSpoiler?: boolean
 }

@@ -176,6 +176,7 @@ export interface Post {
   title: string
   body: string | null
   url: string | null
+  rating: number | null
   is_pinned: boolean
   is_locked: boolean
   is_nsfw: boolean

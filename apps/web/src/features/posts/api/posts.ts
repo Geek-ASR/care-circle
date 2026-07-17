@@ -91,6 +91,7 @@ export async function createPost(input: CreatePostInput) {
       title: input.title,
       body: input.body ?? null,
       url: input.url ?? null,
+      rating: input.rating ?? null,
       is_nsfw: input.isNsfw ?? false,
       is_spoiler: input.isSpoiler ?? false,
     })

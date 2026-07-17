@@ -6,6 +6,7 @@ import { VoteControl } from '@/features/voting/components/VoteControl'
 import { getPostMediaUrl } from '../api/postMedia'
 import type { PostWithVote } from '../hooks/usePosts'
 import { PostTypeBadge } from './PostTypeBadge'
+import { StarRating } from './StarRating'
 
 export function PostCard({
   post,
@@ -76,6 +77,7 @@ export function PostCard({
 
         <div className="mt-1.5 flex flex-wrap items-center gap-2">
           <PostTypeBadge postType={post.post_type} />
+          {post.rating != null && <StarRating value={post.rating} size="sm" />}
           {post.is_nsfw && <Badge variant="danger">NSFW</Badge>}
           {post.is_spoiler && <Badge variant="warning">Spoiler</Badge>}
           {post.post_tags?.map(({ tag }) => (
