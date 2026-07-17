@@ -10,6 +10,8 @@ import { MarkdownEditor } from '@/components/MarkdownEditor'
 import { VoteControl } from '@/features/voting/components/VoteControl'
 import { PostTypeBadge } from '@/features/posts/components/PostTypeBadge'
 import { CommentThread } from '@/features/comments/components/CommentThread'
+import { BookmarkButton } from '@/features/bookmarks/components/BookmarkButton'
+import { ReportDialog } from '@/features/reports/components/ReportDialog'
 import { useAuth } from '@/contexts/AuthContext'
 import {
   usePost,
@@ -123,6 +125,11 @@ export default function PostPage() {
                 {post.is_nsfw && <Badge variant="danger">NSFW</Badge>}
                 {post.is_spoiler && <Badge variant="warning">Spoiler</Badge>}
                 {post.is_locked && <Badge variant="outline">Locked</Badge>}
+                {post.post_tags?.map(({ tag }) => (
+                  <Badge key={tag.id} variant="outline">
+                    {tag.name}
+                  </Badge>
+                ))}
               </div>
 
               {post.post_type === 'link' && post.url && (
@@ -147,6 +154,11 @@ export default function PostPage() {
                 ))}
 
               {post.body && <MarkdownContent content={post.body} className="mt-3" />}
+
+              <div className="mt-3 flex items-center gap-4">
+                <BookmarkButton postId={post.id} />
+                {!isOwner && <ReportDialog targetType="post" targetId={post.id} />}
+              </div>
 
               {isOwner && (
                 <div className="mt-3 flex items-center gap-3 text-xs text-muted-foreground">

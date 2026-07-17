@@ -19,6 +19,8 @@ import {
 import { MarkdownEditor } from '@/components/MarkdownEditor'
 import { useAuth } from '@/contexts/AuthContext'
 import { useCommunities } from '@/features/communities/hooks/useCommunities'
+import { TagPicker } from '@/features/tags/components/TagPicker'
+import { setPostTags } from '@/features/tags/api/tags'
 import { useCreatePost } from '../hooks/usePosts'
 import { createPostSchema, type CreatePostValues } from '../schemas'
 import { uploadPostImage, validateImageFile } from '../api/postMedia'
@@ -33,6 +35,7 @@ export function CreatePostForm() {
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imageError, setImageError] = useState<string | null>(null)
   const [formError, setFormError] = useState<string | null>(null)
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
 
   const preselected = communities?.find((c) => c.slug === searchParams.get('community'))
 
@@ -92,6 +95,10 @@ export function CreatePostForm() {
 
       if (values.postType === 'image' && imageFile) {
         await uploadPostImage(imageFile, user.id, post.id)
+      }
+
+      if (selectedTagIds.length > 0) {
+        await setPostTags(post.id, selectedTagIds)
       }
 
       navigate(`/posts/${post.id}`)
@@ -191,6 +198,11 @@ export function CreatePostForm() {
           {imageError && <p className="text-xs text-danger">{imageError}</p>}
         </div>
       )}
+
+      <div className="flex flex-col gap-1.5">
+        <Label>Tags (optional)</Label>
+        <TagPicker selectedTagIds={selectedTagIds} onChange={setSelectedTagIds} />
+      </div>
 
       {formError && (
         <p role="alert" className="text-sm text-danger">

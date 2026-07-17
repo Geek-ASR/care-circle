@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
 import { formatDistanceToNowStrict } from 'date-fns'
 import { MessageSquare, Pin } from 'lucide-react'
-import { Badge } from '@/components/ui'
+import { Avatar, AvatarFallback, AvatarImage, Badge } from '@/components/ui'
 import { VoteControl } from '@/features/voting/components/VoteControl'
+import { getPostMediaUrl } from '../api/postMedia'
 import type { PostWithVote } from '../hooks/usePosts'
 import { PostTypeBadge } from './PostTypeBadge'
 
@@ -14,6 +15,10 @@ export function PostCard({
   showCommunity?: boolean
 }) {
   const authorName = post.author?.display_name ?? post.author?.username ?? '[deleted]'
+  const authorInitial = authorName.charAt(0).toUpperCase()
+  const thumbnail = post.post_media?.[0]?.storage_path
+    ? getPostMediaUrl(post.post_media[0].storage_path)
+    : null
 
   return (
     <article className="flex gap-3 rounded-lg border border-border bg-surface p-3 transition-colors hover:bg-surface-hover">
@@ -39,6 +44,10 @@ export function PostCard({
             </Link>
           )}
           <span>·</span>
+          <Avatar className="h-4 w-4">
+            <AvatarImage src={post.author?.avatar_url ?? undefined} alt="" />
+            <AvatarFallback className="text-[9px]">{authorInitial}</AvatarFallback>
+          </Avatar>
           <span>Posted by {authorName}</span>
           <span>·</span>
           <span>
@@ -57,6 +66,11 @@ export function PostCard({
           <PostTypeBadge postType={post.post_type} />
           {post.is_nsfw && <Badge variant="danger">NSFW</Badge>}
           {post.is_spoiler && <Badge variant="warning">Spoiler</Badge>}
+          {post.post_tags?.map(({ tag }) => (
+            <Badge key={tag.id} variant="outline">
+              {tag.name}
+            </Badge>
+          ))}
         </div>
 
         {post.post_type === 'link' && post.url && (
@@ -68,6 +82,17 @@ export function PostCard({
           >
             {post.url}
           </a>
+        )}
+
+        {thumbnail && (
+          <Link to={`/posts/${post.id}`} className="mt-2 block">
+            <img
+              src={thumbnail}
+              alt=""
+              className="max-h-80 w-full rounded-md border border-border object-cover"
+              loading="lazy"
+            />
+          </Link>
         )}
 
         <Link

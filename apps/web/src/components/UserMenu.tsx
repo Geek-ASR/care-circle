@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { LogOut, Settings, User as UserIcon } from 'lucide-react'
+import { Bookmark, LogOut, Settings, User as UserIcon } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import {
   Avatar,
@@ -47,6 +47,11 @@ export function UserMenu() {
         <DropdownMenuItem asChild>
           <Link to={profile ? `/u/${profile.username}` : '#'}>
             <UserIcon className="h-4 w-4" /> Profile
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/saved">
+            <Bookmark className="h-4 w-4" /> Saved posts
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>

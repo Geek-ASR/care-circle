@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { subscribeToTable } from '@/services/realtime'
 import { queryKeys } from '@/services/queryClient'
 import { getUserVotes } from '@/features/voting/api/votes'
+import { getCommentReactions } from '@/features/reactions/api/reactions'
 import type { Comment } from '@/types/database'
 import {
   createComment,
@@ -39,9 +40,25 @@ export function useCommentTree(postId: string | undefined, sort: CommentSort) {
     ),
   })
 
+  const reactionsQuery = useQuery({
+    queryKey: ['comment-reactions', postId, user?.id ?? 'anon'],
+    queryFn: () =>
+      getCommentReactions(
+        (commentsQuery.data ?? []).map((c) => c.id),
+        user?.id,
+      ),
+    enabled: Boolean(postId && commentsQuery.data && commentsQuery.data.length > 0),
+  })
+
   const tree = useMemo(
-    () => buildCommentTree(commentsQuery.data ?? [], votesQuery.data ?? {}, sort),
-    [commentsQuery.data, votesQuery.data, sort],
+    () =>
+      buildCommentTree(
+        commentsQuery.data ?? [],
+        votesQuery.data ?? {},
+        reactionsQuery.data ?? {},
+        sort,
+      ),
+    [commentsQuery.data, votesQuery.data, reactionsQuery.data, sort],
   )
 
   return {

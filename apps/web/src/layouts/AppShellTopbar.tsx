@@ -6,6 +6,7 @@ import { ThemeToggle } from '@/components/ThemeToggle'
 import { UserMenu } from '@/components/UserMenu'
 import { NotificationBell } from '@/features/notifications/components/NotificationBell'
 import { useAuth } from '@/contexts/AuthContext'
+import { MobileNav } from './MobileNav'
 
 export function AppShellTopbar() {
   const { user } = useAuth()
@@ -19,7 +20,9 @@ export function AppShellTopbar() {
   }
 
   return (
-    <header className="sticky top-0 z-40 flex h-14 items-center gap-4 border-b border-border bg-background/95 px-4 backdrop-blur">
+    <header className="sticky top-0 z-40 flex h-14 items-center gap-2 border-b border-border bg-background/95 px-3 backdrop-blur md:gap-4 md:px-4">
+      <MobileNav />
+
       <Link
         to="/"
         className="shrink-0 text-base font-semibold tracking-tight text-foreground"
@@ -45,7 +48,7 @@ export function AppShellTopbar() {
         />
       </form>
 
-      <div className="ml-auto flex items-center gap-2">
+      <div className="ml-auto flex items-center gap-1 md:gap-2">
         {user && (
           <Button asChild size="sm" variant="outline" className="hidden sm:inline-flex">
             <Link to="/submit">
@@ -53,6 +56,11 @@ export function AppShellTopbar() {
             </Link>
           </Button>
         )}
+        <Button asChild variant="ghost" size="icon" className="md:hidden">
+          <Link to="/communities" aria-label="Search communities">
+            <Search className="h-4 w-4" />
+          </Link>
+        </Button>
         <ThemeToggle />
         <NotificationBell />
         <UserMenu />

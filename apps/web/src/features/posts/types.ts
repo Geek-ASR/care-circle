@@ -16,6 +16,8 @@ export interface PostCommunitySummary {
 export interface PostWithRelations extends Post {
   author: PostAuthor | null
   community: PostCommunitySummary | null
+  post_media: { storage_path: string; position: number }[]
+  post_tags: { tag: { id: string; name: string; slug: string } }[]
 }
 
 export interface CreatePostInput {

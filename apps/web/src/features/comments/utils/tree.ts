@@ -1,3 +1,4 @@
+import type { ReactionSummary } from '@/features/reactions/api/reactions'
 import type { CommentNode, CommentSort, CommentWithAuthor } from '../types'
 
 function sortSiblings(nodes: CommentNode[], sort: CommentSort) {
@@ -12,6 +13,7 @@ function sortSiblings(nodes: CommentNode[], sort: CommentSort) {
 export function buildCommentTree(
   comments: CommentWithAuthor[],
   votes: Record<string, 1 | -1>,
+  reactions: Record<string, ReactionSummary[]>,
   sort: CommentSort,
 ): CommentNode[] {
   const nodeById = new Map<string, CommentNode>()
@@ -21,6 +23,7 @@ export function buildCommentTree(
     nodeById.set(comment.id, {
       ...comment,
       userVote: votes[comment.id] ?? 0,
+      reactions: reactions[comment.id] ?? [],
       children: [],
     })
   }

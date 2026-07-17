@@ -3,7 +3,7 @@ import type { PostType } from '@/types/database'
 import type { CreatePostInput, PostSort, PostWithRelations } from '../types'
 
 const POST_SELECT =
-  '*, author:profiles!posts_author_id_fkey(username, display_name, avatar_url), community:communities(slug, name)'
+  '*, author:profiles!posts_author_id_fkey(username, display_name, avatar_url), community:communities(slug, name), post_media(storage_path, position), post_tags(tag:tags(id, name, slug))'
 
 interface ListPostsParams {
   communityId?: string
@@ -25,7 +25,11 @@ export async function listPosts({
 }: ListPostsParams): Promise<ListPostsResult> {
   // Hot/controversial are re-ranked client-side (see features/posts/utils/ranking.ts), so
   // both pull a recency-bounded window from the DB rather than a true keyset order.
-  let query = supabase.from('posts').select(POST_SELECT).eq('status', 'published')
+  let query = supabase
+    .from('posts')
+    .select(POST_SELECT)
+    .eq('status', 'published')
+    .order('position', { foreignTable: 'post_media' })
 
   if (communityId) query = query.eq('community_id', communityId)
 
@@ -52,11 +56,25 @@ export async function listPosts({
   return { posts, nextPage: posts.length === pageSize ? page + 1 : null }
 }
 
+export async function listPostsByAuthor(authorId: string): Promise<PostWithRelations[]> {
+  const { data, error } = await supabase
+    .from('posts')
+    .select(POST_SELECT)
+    .eq('author_id', authorId)
+    .eq('status', 'published')
+    .order('created_at', { ascending: false })
+    .order('position', { foreignTable: 'post_media' })
+
+  if (error) throw error
+  return data as unknown as PostWithRelations[]
+}
+
 export async function getPost(postId: string): Promise<PostWithRelations | null> {
   const { data, error } = await supabase
     .from('posts')
     .select(POST_SELECT)
     .eq('id', postId)
+    .order('position', { foreignTable: 'post_media' })
     .maybeSingle()
 
   if (error) throw error

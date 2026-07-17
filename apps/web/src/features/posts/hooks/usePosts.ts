@@ -13,6 +13,7 @@ import {
   createPost,
   getPost,
   listPosts,
+  listPostsByAuthor,
   setPostStatus,
   type ListPostsResult,
 } from '../api/posts'
@@ -89,6 +90,26 @@ export function usePost(postId: string | undefined) {
 }
 
 /** Live-updates score/comment_count on the currently open post as votes/comments come in. */
+export function usePostsByAuthor(authorId: string | undefined) {
+  const { user } = useAuth()
+
+  return useQuery({
+    queryKey: ['posts', 'author', authorId ?? 'none', user?.id ?? 'anon'],
+    queryFn: async (): Promise<PostWithVote[]> => {
+      const posts = await listPostsByAuthor(authorId as string)
+      const votes = user
+        ? await getUserVotes(
+            'post',
+            posts.map((p) => p.id),
+            user.id,
+          )
+        : {}
+      return posts.map((post) => ({ ...post, userVote: votes[post.id] ?? 0 }))
+    },
+    enabled: Boolean(authorId),
+  })
+}
+
 export function usePostRealtimeSync(postId: string | undefined) {
   const queryClient = useQueryClient()
 

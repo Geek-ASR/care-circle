@@ -1,5 +1,11 @@
 import { supabase } from '@/services/supabaseClient'
-import type { Community, CommunityMemberRole, CommunityRule } from '@/types/database'
+import type {
+  Community,
+  CommunityMemberRole,
+  CommunityResource,
+  CommunityRule,
+  WikiPage,
+} from '@/types/database'
 import type { CommunityWithCondition, MyCommunity } from '../types'
 
 export async function listCommunities(): Promise<CommunityWithCondition[]> {
@@ -63,6 +69,45 @@ export async function listCommunityRules(communityId: string): Promise<Community
     .select('*')
     .eq('community_id', communityId)
     .order('position')
+
+  if (error) throw error
+  return data
+}
+
+export async function listCommunityResources(
+  communityId: string,
+): Promise<CommunityResource[]> {
+  const { data, error } = await supabase
+    .from('community_resources')
+    .select('*')
+    .eq('community_id', communityId)
+    .order('position')
+
+  if (error) throw error
+  return data
+}
+
+export async function listWikiPages(communityId: string): Promise<WikiPage[]> {
+  const { data, error } = await supabase
+    .from('wiki_pages')
+    .select('*')
+    .eq('community_id', communityId)
+    .order('title')
+
+  if (error) throw error
+  return data
+}
+
+export async function getWikiPage(
+  communityId: string,
+  slug: string,
+): Promise<WikiPage | null> {
+  const { data, error } = await supabase
+    .from('wiki_pages')
+    .select('*')
+    .eq('community_id', communityId)
+    .eq('slug', slug)
+    .maybeSingle()
 
   if (error) throw error
   return data

@@ -35,7 +35,7 @@ describe('buildCommentTree', () => {
       }),
     ]
 
-    const tree = buildCommentTree(comments, {}, 'old')
+    const tree = buildCommentTree(comments, {}, {}, 'old')
 
     expect(tree).toHaveLength(1)
     expect(tree[0]?.id).toBe('root')
@@ -51,7 +51,7 @@ describe('buildCommentTree', () => {
       }),
     )
 
-    const tree = buildCommentTree(comments, {}, 'old')
+    const tree = buildCommentTree(comments, {}, {}, 'old')
 
     let depth = 0
     let node = tree[0]
@@ -68,14 +68,27 @@ describe('buildCommentTree', () => {
       comment({ id: 'high', score: 10 }),
     ]
 
-    const tree = buildCommentTree(comments, {}, 'best')
+    const tree = buildCommentTree(comments, {}, {}, 'best')
 
     expect(tree.map((c) => c.id)).toEqual(['high', 'low'])
   })
 
   it('attaches the current user vote for each comment', () => {
     const comments = [comment({ id: 'a' })]
-    const tree = buildCommentTree(comments, { a: 1 }, 'old')
+    const tree = buildCommentTree(comments, { a: 1 }, {}, 'old')
     expect(tree[0]?.userVote).toBe(1)
+  })
+
+  it('attaches reaction summaries for each comment', () => {
+    const comments = [comment({ id: 'a' })]
+    const reactions = { a: [{ emoji: '👍', count: 2, reactedByMe: true }] }
+    const tree = buildCommentTree(comments, {}, reactions, 'old')
+    expect(tree[0]?.reactions).toEqual(reactions.a)
+  })
+
+  it('defaults to an empty reaction list when none exist', () => {
+    const comments = [comment({ id: 'a' })]
+    const tree = buildCommentTree(comments, {}, {}, 'old')
+    expect(tree[0]?.reactions).toEqual([])
   })
 })

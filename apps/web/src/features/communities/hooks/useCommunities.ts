@@ -5,11 +5,14 @@ import { toast } from '@/store/toastStore'
 import {
   getCommunityBySlug,
   getMembership,
+  getWikiPage,
   joinCommunity,
   leaveCommunity,
   listCommunities,
+  listCommunityResources,
   listCommunityRules,
   listMyCommunities,
+  listWikiPages,
 } from '../api/communities'
 
 export function useCommunities() {
@@ -43,6 +46,33 @@ export function useCommunityRules(communityId: string | undefined) {
     queryKey: ['community-rules', communityId ?? 'none'],
     queryFn: () => listCommunityRules(communityId as string),
     enabled: Boolean(communityId),
+  })
+}
+
+export function useCommunityResources(communityId: string | undefined) {
+  return useQuery({
+    queryKey: ['community-resources', communityId ?? 'none'],
+    queryFn: () => listCommunityResources(communityId as string),
+    enabled: Boolean(communityId),
+  })
+}
+
+export function useWikiPages(communityId: string | undefined) {
+  return useQuery({
+    queryKey: ['wiki-pages', communityId ?? 'none'],
+    queryFn: () => listWikiPages(communityId as string),
+    enabled: Boolean(communityId),
+  })
+}
+
+export function useWikiPage(
+  communityId: string | undefined,
+  wikiSlug: string | undefined,
+) {
+  return useQuery({
+    queryKey: ['wiki-page', communityId ?? 'none', wikiSlug ?? 'none'],
+    queryFn: () => getWikiPage(communityId as string, wikiSlug as string),
+    enabled: Boolean(communityId && wikiSlug),
   })
 }
 

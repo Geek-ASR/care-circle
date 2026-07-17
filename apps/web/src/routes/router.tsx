@@ -9,11 +9,13 @@ import { RequireOnboarding } from '@/components/RequireOnboarding'
 const RootRoute = lazy(() => import('@/pages/RootRoute'))
 const CommunitiesPage = lazy(() => import('@/pages/CommunitiesPage'))
 const CommunityPage = lazy(() => import('@/pages/CommunityPage'))
+const WikiPagePage = lazy(() => import('@/pages/WikiPagePage'))
 const PostPage = lazy(() => import('@/pages/PostPage'))
 const SubmitPostPage = lazy(() => import('@/pages/SubmitPostPage'))
 const ProfilePage = lazy(() => import('@/pages/ProfilePage'))
 const SettingsPage = lazy(() => import('@/pages/SettingsPage'))
 const NotificationsPage = lazy(() => import('@/pages/NotificationsPage'))
+const SavedPostsPage = lazy(() => import('@/pages/SavedPostsPage'))
 const OnboardingPage = lazy(() => import('@/pages/OnboardingPage'))
 const LoginPage = lazy(() => import('@/pages/LoginPage'))
 const SignupPage = lazy(() => import('@/pages/SignupPage'))
@@ -32,6 +34,7 @@ export const router = createBrowserRouter(
           children: [
             { path: '/communities', element: <CommunitiesPage /> },
             { path: '/r/:slug', element: <CommunityPage /> },
+            { path: '/r/:slug/wiki/:wikiSlug', element: <WikiPagePage /> },
             { path: '/posts/:postId', element: <PostPage /> },
             { path: '/u/:username', element: <ProfilePage /> },
             {
@@ -40,6 +43,7 @@ export const router = createBrowserRouter(
                 { path: '/submit', element: <SubmitPostPage /> },
                 { path: '/settings', element: <SettingsPage /> },
                 { path: '/notifications', element: <NotificationsPage /> },
+                { path: '/saved', element: <SavedPostsPage /> },
               ],
             },
           ],

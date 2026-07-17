@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { Plus, Users } from 'lucide-react'
+import { BookOpen, ExternalLink, Plus, Users } from 'lucide-react'
 import { Button, Skeleton } from '@/components/ui'
 import { useAuth } from '@/contexts/AuthContext'
 import {
   useCommunity,
+  useCommunityResources,
   useCommunityRules,
+  useWikiPages,
 } from '@/features/communities/hooks/useCommunities'
 import { JoinLeaveButton } from '@/features/communities/components/JoinLeaveButton'
 import { PostList } from '@/features/posts/components/PostList'
@@ -19,6 +21,8 @@ export default function CommunityPage() {
   const { user } = useAuth()
   const { data: community, isLoading } = useCommunity(slug)
   const { data: rules } = useCommunityRules(community?.id)
+  const { data: resources } = useCommunityResources(community?.id)
+  const { data: wikiPages } = useWikiPages(community?.id)
   const [sort, setSort] = useState<PostSort>('hot')
 
   if (isLoading) {
@@ -40,30 +44,51 @@ export default function CommunityPage() {
       </Helmet>
 
       <div className="flex flex-col gap-4">
-        <div className="rounded-lg border border-border bg-surface p-4">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <span
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/15 text-lg font-semibold text-primary"
-                aria-hidden="true"
-              >
-                {community.name.charAt(0)}
-              </span>
-              <div>
-                <h1 className="text-lg font-semibold text-foreground">
-                  {community.name}
-                </h1>
-                <p className="text-sm text-muted-foreground">r/{community.slug}</p>
-              </div>
+        <div className="overflow-hidden rounded-lg border border-border bg-surface">
+          {community.banner_url && (
+            <div className="h-32 w-full bg-surface-hover">
+              <img
+                src={community.banner_url}
+                alt=""
+                className="h-full w-full object-cover"
+              />
             </div>
-            <JoinLeaveButton communityId={community.id} />
-          </div>
-          {community.description && (
-            <p className="mt-3 text-sm text-muted-foreground">{community.description}</p>
           )}
-          <div className="mt-3 flex items-center gap-1 text-xs text-muted-foreground">
-            <Users className="h-3.5 w-3.5" />
-            {community.member_count.toLocaleString()} members
+          <div className="p-4">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex items-center gap-3">
+                {community.logo_url ? (
+                  <img
+                    src={community.logo_url}
+                    alt=""
+                    className="h-12 w-12 shrink-0 rounded-full border border-border object-cover"
+                  />
+                ) : (
+                  <span
+                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/15 text-lg font-semibold text-primary"
+                    aria-hidden="true"
+                  >
+                    {community.name.charAt(0)}
+                  </span>
+                )}
+                <div>
+                  <h1 className="text-lg font-semibold text-foreground">
+                    {community.name}
+                  </h1>
+                  <p className="text-sm text-muted-foreground">r/{community.slug}</p>
+                </div>
+              </div>
+              <JoinLeaveButton communityId={community.id} />
+            </div>
+            {community.description && (
+              <p className="mt-3 text-sm text-muted-foreground">
+                {community.description}
+              </p>
+            )}
+            <div className="mt-3 flex items-center gap-1 text-xs text-muted-foreground">
+              <Users className="h-3.5 w-3.5" />
+              {community.member_count.toLocaleString()} members
+            </div>
           </div>
         </div>
 
@@ -97,6 +122,55 @@ export default function CommunityPage() {
                 </li>
               ))}
             </ol>
+          </div>
+        )}
+
+        {resources && resources.length > 0 && (
+          <div className="rounded-lg border border-border bg-surface p-4">
+            <h2 className="mb-3 text-sm font-semibold text-foreground">Resources</h2>
+            <ul className="flex flex-col gap-2">
+              {resources.map((resource) => (
+                <li key={resource.id} className="text-sm">
+                  {resource.url ? (
+                    <a
+                      href={resource.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 text-foreground hover:text-primary"
+                    >
+                      <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+                      {resource.title}
+                    </a>
+                  ) : (
+                    <span className="text-foreground">{resource.title}</span>
+                  )}
+                  {resource.description && (
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      {resource.description}
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {wikiPages && wikiPages.length > 0 && (
+          <div className="rounded-lg border border-border bg-surface p-4">
+            <h2 className="mb-3 text-sm font-semibold text-foreground">Wiki</h2>
+            <ul className="flex flex-col gap-2">
+              {wikiPages.map((page) => (
+                <li key={page.id}>
+                  <Link
+                    to={`/r/${community.slug}/wiki/${page.slug}`}
+                    className="flex items-center gap-1.5 text-sm text-foreground hover:text-primary"
+                  >
+                    <BookOpen className="h-3.5 w-3.5 shrink-0" />
+                    {page.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
       </aside>

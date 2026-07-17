@@ -5,6 +5,8 @@ import { Button } from '@/components/ui'
 import { MarkdownContent } from '@/components/MarkdownContent'
 import { MarkdownEditor } from '@/components/MarkdownEditor'
 import { VoteControl } from '@/features/voting/components/VoteControl'
+import { ReportDialog } from '@/features/reports/components/ReportDialog'
+import { ReactionBar } from '@/features/reactions/components/ReactionBar'
 import { useAuth } from '@/contexts/AuthContext'
 import { cn } from '@/utils/cn'
 import type { CommentNode } from '../types'
@@ -119,6 +121,9 @@ export function CommentItem({
                   >
                     <MessageSquare className="h-3.5 w-3.5" /> Reply
                   </button>
+                  {!isOwner && (
+                    <ReportDialog targetType="comment" targetId={comment.id} />
+                  )}
                   {isOwner && (
                     <>
                       <button
@@ -137,6 +142,16 @@ export function CommentItem({
                       </button>
                     </>
                   )}
+                </div>
+              )}
+
+              {!isRemoved && !editing && (
+                <div className="mt-1.5">
+                  <ReactionBar
+                    postId={postId}
+                    commentId={comment.id}
+                    reactions={comment.reactions}
+                  />
                 </div>
               )}
 
