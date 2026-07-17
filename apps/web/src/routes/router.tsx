@@ -18,6 +18,7 @@ const NotificationsPage = lazy(() => import('@/pages/NotificationsPage'))
 const SavedPostsPage = lazy(() => import('@/pages/SavedPostsPage'))
 const MessagesPage = lazy(() => import('@/pages/MessagesPage'))
 const ConversationPage = lazy(() => import('@/pages/ConversationPage'))
+const SearchPage = lazy(() => import('@/pages/SearchPage'))
 const OnboardingPage = lazy(() => import('@/pages/OnboardingPage'))
 const LoginPage = lazy(() => import('@/pages/LoginPage'))
 const SignupPage = lazy(() => import('@/pages/SignupPage'))
@@ -35,6 +36,7 @@ export const router = createBrowserRouter(
           element: <AppShell />,
           children: [
             { path: '/communities', element: <CommunitiesPage /> },
+            { path: '/search', element: <SearchPage /> },
             { path: '/r/:slug', element: <CommunityPage /> },
             { path: '/r/:slug/wiki/:wikiSlug', element: <WikiPagePage /> },
             { path: '/posts/:postId', element: <PostPage /> },

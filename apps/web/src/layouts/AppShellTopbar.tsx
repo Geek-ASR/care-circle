@@ -17,7 +17,7 @@ export function AppShellTopbar() {
   function handleSearchSubmit(e: React.FormEvent) {
     e.preventDefault()
     const trimmed = query.trim()
-    navigate(trimmed ? `/communities?q=${encodeURIComponent(trimmed)}` : '/communities')
+    navigate(trimmed ? `/search?q=${encodeURIComponent(trimmed)}` : '/search')
   }
 
   return (
@@ -43,9 +43,9 @@ export function AppShellTopbar() {
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search communities..."
+          placeholder="Search CareCircle..."
           className="pl-9"
-          aria-label="Search communities"
+          aria-label="Search"
         />
       </form>
 
@@ -58,7 +58,7 @@ export function AppShellTopbar() {
           </Button>
         )}
         <Button asChild variant="ghost" size="icon" className="md:hidden">
-          <Link to="/communities" aria-label="Search communities">
+          <Link to="/search" aria-label="Search">
             <Search className="h-4 w-4" />
           </Link>
         </Button>
