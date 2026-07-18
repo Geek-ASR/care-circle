@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { Compass, Home, LifeBuoy, Shield, Stethoscope } from 'lucide-react'
+import { Compass, Home, LifeBuoy, ListChecks, Shield, Stethoscope } from 'lucide-react'
 import { cn } from '@/utils/cn'
 import { useAuth } from '@/contexts/AuthContext'
 import { useMyCommunities } from '@/features/communities/hooks/useCommunities'
@@ -34,6 +34,10 @@ export function AppShellNavLinks({ onNavigate }: { onNavigate?: () => void }) {
         <NavLink to="/communities" className={navLinkClasses} onClick={onNavigate}>
           <Compass className="h-4 w-4" aria-hidden="true" />
           Browse communities
+        </NavLink>
+        <NavLink to="/symptom-checker" className={navLinkClasses} onClick={onNavigate}>
+          <ListChecks className="h-4 w-4" aria-hidden="true" />
+          Symptom Checker
         </NavLink>
         {user && (
           <NavLink to="/tracker" className={navLinkClasses} onClick={onNavigate}>

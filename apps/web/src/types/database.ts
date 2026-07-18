@@ -395,6 +395,46 @@ export interface ConditionResource {
   created_at: ISODateString
 }
 
+export interface Symptom {
+  id: UUID
+  name: string
+  slug: string
+  category: string
+  created_at: ISODateString
+}
+
+export interface ConditionSymptom {
+  condition_id: UUID
+  symptom_id: UUID
+  weight: number
+}
+
+export interface SymptomCheckResult {
+  conditionId: UUID
+  conditionName: string
+  conditionSlug: string
+  conditionCategory: string | null
+  communitySlug: string | null
+  score: number
+  matchedSymptomNames: string[]
+}
+
+export interface SymptomCheckAnswers {
+  duration: string
+  severity: number
+  pattern: string
+  notes: string
+}
+
+export interface SymptomCheck {
+  id: UUID
+  user_id: UUID
+  symptom_ids: UUID[]
+  answers: SymptomCheckAnswers
+  results: SymptomCheckResult[]
+  created_at: ISODateString
+}
+
 export interface Report {
   id: UUID
   reporter_id: UUID | null
