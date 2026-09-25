@@ -3,6 +3,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { LogEntryForm } from '@/features/health-tracker/components/LogEntryForm'
 import { LogEntryList } from '@/features/health-tracker/components/LogEntryList'
 import { SymptomTrendChart } from '@/features/health-tracker/components/SymptomTrendChart'
+import { PageHeader } from '@/components/PageHeader'
+import { Stethoscope } from 'lucide-react'
 
 export default function HealthTrackerPage() {
   return (
@@ -10,12 +12,11 @@ export default function HealthTrackerPage() {
       <Helmet>
         <title>Health tracker · CareCircle</title>
       </Helmet>
-      <div>
-        <h1 className="text-xl font-semibold text-foreground">Health tracker</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          A private log only you can see. Track symptoms, medications, and mood over time.
-        </p>
-      </div>
+      <PageHeader
+        icon={Stethoscope}
+        title="Health tracker"
+        description="A private log only you can see. Track symptoms, medications, and mood over time."
+      />
 
       <Tabs defaultValue="new">
         <TabsList>
@@ -24,7 +25,10 @@ export default function HealthTrackerPage() {
           <TabsTrigger value="trends">Trends</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="new" className="mt-4">
+        <TabsContent
+          value="new"
+          className="mt-5 rounded-2xl border border-border bg-surface p-5 shadow-xs sm:p-7"
+        >
           <LogEntryForm />
         </TabsContent>
 
@@ -32,7 +36,10 @@ export default function HealthTrackerPage() {
           <LogEntryList />
         </TabsContent>
 
-        <TabsContent value="trends" className="mt-4">
+        <TabsContent
+          value="trends"
+          className="mt-5 rounded-2xl border border-border bg-surface p-5 shadow-xs sm:p-7"
+        >
           <SymptomTrendChart />
         </TabsContent>
       </Tabs>

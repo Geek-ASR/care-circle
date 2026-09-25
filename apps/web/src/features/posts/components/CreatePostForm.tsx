@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ImageUp } from 'lucide-react'
+import { FileClock, ImageUp, X } from 'lucide-react'
+import { formatDistanceToNowStrict } from 'date-fns'
 import {
   Button,
   Input,
@@ -25,9 +26,17 @@ import { StarRating } from './StarRating'
 import { PollOptionsEditor } from '@/features/polls/components/PollOptionsEditor'
 import { createPollOptions } from '@/features/polls/api/polls'
 import { useCreatePost } from '../hooks/usePosts'
-import { createPostSchema, REVIEW_POST_TYPES, type CreatePostValues } from '../schemas'
+import {
+  createPostSchema,
+  POST_TYPES,
+  REVIEW_POST_TYPES,
+  type CreatePostValues,
+} from '../schemas'
 import { uploadPostImage, validateImageFile } from '../api/postMedia'
 import type { PostType } from '@/types/database'
+import { useDraftAutosave } from '@/features/drafts/hooks/useDraftAutosave'
+import { describeWriteError } from '@/utils/errors'
+import { DraftStatus } from '@/features/drafts/components/DraftStatus'
 
 const TEXT_LIKE_TYPES: PostType[] = [
   'text',
@@ -73,6 +82,10 @@ export function CreatePostForm() {
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
 
   const preselected = communities?.find((c) => c.slug === searchParams.get('community'))
+  // ?type=question|poll|... lets entry points (e.g. the home composer's quick actions)
+  // open the form already set to the right kind of post.
+  const requestedType = searchParams.get('type')
+  const initialPostType = POST_TYPES.find((t) => t === requestedType) ?? 'text'
 
   const {
     register,
@@ -85,7 +98,7 @@ export function CreatePostForm() {
     resolver: zodResolver(createPostSchema),
     defaultValues: {
       communityId: preselected?.id ?? '',
-      postType: 'text',
+      postType: initialPostType,
       title: '',
       body: '',
       url: '',
@@ -108,6 +121,20 @@ export function CreatePostForm() {
 
   const postType = watch('postType')
   const body = watch('body') ?? ''
+  const title = watch('title') ?? ''
+  const communityId = watch('communityId') ?? ''
+
+  const draft = useDraftAutosave({ communityId, postType, title, body })
+
+  function restoreDraft() {
+    const saved = draft.restorableDraft
+    if (!saved) return
+    if (saved.community_id) setValue('communityId', saved.community_id)
+    if (saved.post_type) setValue('postType', saved.post_type)
+    setValue('title', saved.title ?? '')
+    setValue('body', saved.body ?? '')
+    draft.dismissOffer()
+  }
   const rating = watch('rating') ?? 0
   const pollOptions = watch('pollOptions') ?? ['', '']
 
@@ -165,14 +192,59 @@ export function CreatePostForm() {
         await setPostTags(post.id, selectedTagIds)
       }
 
+      await draft.clear()
       navigate(`/posts/${post.id}`)
     } catch (error) {
-      setFormError(error instanceof Error ? error.message : 'Could not create your post.')
+      setFormError(
+        describeWriteError(
+          error,
+          error instanceof Error ? error.message : 'Could not create your post.',
+          "You can't post in this community right now — you may be muted or banned there. Check the community page for details.",
+        ),
+      )
     }
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      onChange={draft.markDirty}
+      noValidate
+      className="flex flex-col gap-4"
+    >
+      {draft.restorableDraft && (
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-primary/30 bg-primary/[0.07] px-4 py-3">
+          <FileClock className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+          <div className="min-w-0 flex-1 text-sm">
+            <p className="font-medium text-foreground">
+              You have an unfinished draft
+              {draft.restorableDraft.title ? `: “${draft.restorableDraft.title}”` : ''}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Saved{' '}
+              {formatDistanceToNowStrict(new Date(draft.restorableDraft.updated_at), {
+                addSuffix: true,
+              })}
+              . Restore it, or start writing to replace it.
+            </p>
+          </div>
+          <div className="flex items-center gap-1">
+            <Button type="button" size="sm" onClick={restoreDraft}>
+              Restore draft
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              aria-label="Discard draft"
+              onClick={() => void draft.clear()}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="community">Community</Label>
         <Controller
@@ -337,9 +409,12 @@ export function CreatePostForm() {
         </p>
       )}
 
-      <Button type="submit" disabled={isSubmitting} className="self-start">
-        {isSubmitting ? 'Posting…' : 'Post'}
-      </Button>
+      <div className="flex flex-wrap items-center gap-4">
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Posting…' : 'Post'}
+        </Button>
+        <DraftStatus status={draft.status} savedAt={draft.savedAt} />
+      </div>
     </form>
   )
 }

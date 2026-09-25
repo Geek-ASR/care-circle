@@ -1,4 +1,5 @@
-import { Lock, LockOpen, Pin, PinOff } from 'lucide-react'
+import { Lock, LockOpen, Pin, PinOff, ShieldBan } from 'lucide-react'
+import { RestrictUserDialog } from '@/features/community-bans/components/RestrictUserDialog'
 import {
   useIsModeratorOfCommunity,
   useTogglePostLock,
@@ -10,11 +11,14 @@ export function ModeratorPostActions({
   communityId,
   isPinned,
   isLocked,
+  author,
 }: {
   postId: string
   communityId: string
   isPinned: boolean
   isLocked: boolean
+  /** The post's author, when a moderator should be offered to restrict them. */
+  author?: { id: string; name: string } | null
 }) {
   const { isModerator } = useIsModeratorOfCommunity(communityId)
   const togglePin = useTogglePostPin(postId, communityId)
@@ -56,6 +60,18 @@ export function ModeratorPostActions({
           </>
         )}
       </button>
+      {author && (
+        <RestrictUserDialog
+          communityId={communityId}
+          userId={author.id}
+          userName={author.name}
+          trigger={
+            <button type="button" className="flex items-center gap-1 hover:text-danger">
+              <ShieldBan className="h-3.5 w-3.5" /> Restrict author
+            </button>
+          }
+        />
+      )}
     </div>
   )
 }

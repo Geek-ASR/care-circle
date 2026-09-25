@@ -73,7 +73,9 @@ export function OnboardingForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
       <div>
-        <h1 className="text-xl font-semibold text-foreground">Set up your profile</h1>
+        <h1 className="font-display text-2xl font-bold tracking-tight text-foreground">
+          Set up your profile
+        </h1>
         <p className="mt-1 text-sm text-muted-foreground">
           This helps others in the community find and connect with you. You can change all
           of this later.

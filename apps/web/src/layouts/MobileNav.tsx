@@ -4,6 +4,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { Menu, X } from 'lucide-react'
 import { cn } from '@/utils/cn'
 import { Button } from '@/components/ui'
+import { Logo } from '@/components/Logo'
 import { AppShellNavLinks } from './AppShellNavLinks'
 
 export function MobileNav() {
@@ -19,13 +20,13 @@ export function MobileNav() {
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay
           className={cn(
-            'fixed inset-0 z-50 bg-black/50 transition-opacity duration-150',
+            'fixed inset-0 z-50 bg-black/60 backdrop-blur-sm transition-opacity duration-150',
             'data-[state=open]:opacity-100 data-[state=closed]:opacity-0',
           )}
         />
         <DialogPrimitive.Content
           className={cn(
-            'fixed inset-y-0 left-0 z-50 flex h-full w-72 max-w-[85vw] flex-col gap-6',
+            'fixed inset-y-0 left-0 z-50 flex h-full w-72 max-w-[85vw] flex-col gap-6 overflow-y-auto',
             'border-r border-border bg-surface-raised p-4 shadow-lg',
             'transition-transform duration-200 ease-out focus:outline-none',
             'data-[state=open]:translate-x-0 data-[state=closed]:-translate-x-full',
@@ -33,12 +34,8 @@ export function MobileNav() {
         >
           <div className="flex items-center justify-between">
             <DialogPrimitive.Title asChild>
-              <Link
-                to="/"
-                onClick={() => setOpen(false)}
-                className="text-base font-semibold text-foreground"
-              >
-                CareCircle
+              <Link to="/" onClick={() => setOpen(false)} aria-label="CareCircle home">
+                <Logo />
               </Link>
             </DialogPrimitive.Title>
             <DialogPrimitive.Close asChild>

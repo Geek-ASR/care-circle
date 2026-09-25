@@ -21,8 +21,8 @@ export default defineConfig({
         short_name: 'CareCircle',
         description:
           'A community platform where people living with illness, in all its forms, find others who understand, share experiences, and support each other.',
-        theme_color: '#0b181c',
-        background_color: '#0b181c',
+        theme_color: '#0e131b',
+        background_color: '#0e131b',
         display: 'standalone',
         start_url: '.',
         icons: [

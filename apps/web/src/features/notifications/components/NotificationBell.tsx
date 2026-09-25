@@ -17,37 +17,7 @@ import {
   useMarkNotificationRead,
   useNotifications,
 } from '../hooks/useNotifications'
-import type { NotificationWithActor } from '../api/notifications'
-
-function notificationMessage(notification: NotificationWithActor): string {
-  const actor =
-    notification.actor?.display_name ?? notification.actor?.username ?? 'Someone'
-  switch (notification.type) {
-    case 'reply':
-      return `${actor} replied to you`
-    case 'mention':
-      return `${actor} mentioned you`
-    case 'upvote':
-      return `${actor} upvoted your post`
-    case 'follow':
-      return `${actor} started following you`
-    case 'moderator_message':
-      return `New message from a moderator`
-    case 'announcement':
-      return `New community announcement`
-    case 'badge_earned':
-      return `You earned a new badge`
-    default:
-      return 'New notification'
-  }
-}
-
-function notificationHref(notification: NotificationWithActor): string {
-  if (notification.target_type === 'post' && notification.target_id) {
-    return `/posts/${notification.target_id}`
-  }
-  return '/notifications'
-}
+import { notificationHref, notificationMessage } from '../utils/format'
 
 export function NotificationBell() {
   const { user } = useAuth()
@@ -66,24 +36,23 @@ export function NotificationBell() {
           className="relative"
           aria-label="Notifications"
         >
-          <Bell className="h-4 w-4" />
+          <Bell className="h-[18px] w-[18px]" />
           {unreadCount > 0 && (
-            <Badge
-              variant="primary"
-              className="absolute -right-1 -top-1 h-4 min-w-4 justify-center px-1 text-[10px]"
-            >
+            <Badge className="absolute -right-0.5 -top-0.5 h-[18px] min-w-[18px] justify-center bg-secondary px-1 text-[10px] font-bold text-secondary-foreground ring-2 ring-background">
               {unreadCount > 9 ? '9+' : unreadCount}
             </Badge>
           )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80">
-        <div className="flex items-center justify-between px-2 py-1.5">
-          <DropdownMenuLabel className="p-0">Notifications</DropdownMenuLabel>
+        <div className="flex items-center justify-between px-2.5 py-2">
+          <DropdownMenuLabel className="p-0 font-display text-sm text-foreground">
+            Notifications
+          </DropdownMenuLabel>
           {unreadCount > 0 && (
             <button
               type="button"
-              className="text-xs text-primary hover:underline"
+              className="text-xs font-medium text-primary hover:underline"
               onClick={() => markAllRead.mutate()}
             >
               Mark all read
@@ -92,9 +61,12 @@ export function NotificationBell() {
         </div>
         <DropdownMenuSeparator />
         {notifications.length === 0 && (
-          <p className="px-2 py-4 text-center text-sm text-muted-foreground">
-            You&apos;re all caught up.
-          </p>
+          <div className="flex flex-col items-center gap-2 px-2 py-8 text-center">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <Bell className="h-4 w-4" aria-hidden="true" />
+            </span>
+            <p className="text-sm text-muted-foreground">You&apos;re all caught up.</p>
+          </div>
         )}
         {notifications.map((notification) => (
           <DropdownMenuItem key={notification.id} asChild>
@@ -107,9 +79,17 @@ export function NotificationBell() {
             >
               <span
                 className={
-                  notification.is_read ? 'text-muted-foreground' : 'text-foreground'
+                  notification.is_read
+                    ? 'text-muted-foreground'
+                    : 'font-medium text-foreground'
                 }
               >
+                {!notification.is_read && (
+                  <span
+                    className="mr-2 inline-block h-2 w-2 rounded-full bg-primary align-middle"
+                    aria-hidden="true"
+                  />
+                )}
                 {notificationMessage(notification)}
               </span>
               <span className="text-xs text-muted-foreground">

@@ -12,6 +12,7 @@ import {
 } from '@/components/ui'
 import { PostTypeBadge } from '@/features/posts/components/PostTypeBadge'
 import { useSearch } from '@/features/search/hooks/useSearch'
+import { PageHeader } from '@/components/PageHeader'
 
 function SearchSection({
   title,
@@ -50,7 +51,12 @@ export default function SearchPage() {
       </Helmet>
 
       <div>
-        <h1 className="mb-3 text-xl font-semibold text-foreground">Search</h1>
+        <PageHeader
+          icon={Search}
+          title="Search"
+          description="Find posts, communities, people and tags."
+          className="mb-5"
+        />
         <div className="relative">
           <Search
             className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"

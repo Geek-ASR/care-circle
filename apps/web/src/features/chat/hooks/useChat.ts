@@ -1,3 +1,5 @@
+import { describeWriteError } from '@/utils/errors'
+import { toast } from '@/store/toastStore'
 import { useEffect } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
@@ -113,6 +115,13 @@ export function useSendMessage(conversationId: string) {
 
   return useMutation({
     mutationFn: (body: string) => sendMessage(conversationId, user!.id, body),
+    onError: (error) => {
+      toast({
+        title: 'Message not sent',
+        description: describeWriteError(error, 'Check your connection and try again.'),
+        variant: 'danger',
+      })
+    },
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: queryKeys.conversationMessages(conversationId),

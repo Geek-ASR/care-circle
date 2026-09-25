@@ -20,7 +20,7 @@ export function CategoryChip({
       className={cn(
         'inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors',
         active
-          ? 'border-primary bg-primary/15 text-primary'
+          ? 'border-primary bg-primary text-primary-foreground shadow-sm'
           : 'border-border bg-surface text-muted-foreground hover:bg-surface-hover hover:text-foreground',
         className,
       )}

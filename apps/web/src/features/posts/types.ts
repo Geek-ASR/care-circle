@@ -6,6 +6,7 @@ export interface PostAuthor {
   username: string
   display_name: string | null
   avatar_url: string | null
+  reputation_score?: number
 }
 
 export interface PostCommunitySummary {

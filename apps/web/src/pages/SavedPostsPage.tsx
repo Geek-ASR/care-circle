@@ -2,6 +2,9 @@ import { Helmet } from 'react-helmet-async'
 import { Skeleton } from '@/components/ui'
 import { useBookmarkedPosts } from '@/features/bookmarks/hooks/useBookmarks'
 import { PostCard } from '@/features/posts/components/PostCard'
+import { PageHeader } from '@/components/PageHeader'
+import { EmptyState } from '@/components/EmptyState'
+import { Bookmark } from 'lucide-react'
 
 export default function SavedPostsPage() {
   const { data: posts, isLoading } = useBookmarkedPosts()
@@ -11,19 +14,25 @@ export default function SavedPostsPage() {
       <Helmet>
         <title>Saved posts · CareCircle</title>
       </Helmet>
-      <h1 className="text-xl font-semibold text-foreground">Saved posts</h1>
+      <PageHeader
+        icon={Bookmark}
+        title="Saved posts"
+        description="Posts you've bookmarked to come back to."
+      />
 
       {isLoading && (
         <div className="flex flex-col gap-3">
-          <Skeleton className="h-32" />
-          <Skeleton className="h-32" />
+          <Skeleton className="h-36 rounded-2xl" />
+          <Skeleton className="h-36 rounded-2xl" />
         </div>
       )}
 
       {!isLoading && posts?.length === 0 && (
-        <p className="py-12 text-center text-sm text-muted-foreground">
-          Posts you save will show up here.
-        </p>
+        <EmptyState
+          icon={Bookmark}
+          title="Nothing saved yet"
+          description="Tap Save on any post to keep it here for later."
+        />
       )}
 
       <div className="flex flex-col gap-3">

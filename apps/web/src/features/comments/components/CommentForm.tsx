@@ -1,7 +1,9 @@
+import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import { Button } from '@/components/ui'
 import { MarkdownEditor } from '@/components/MarkdownEditor'
 import { useAuth } from '@/contexts/AuthContext'
+import { describeWriteError } from '@/utils/errors'
 import { useCreateComment } from '../hooks/useComments'
 
 interface CommentFormProps {
@@ -20,22 +22,40 @@ export function CommentForm({
 }: CommentFormProps) {
   const { user } = useAuth()
   const [body, setBody] = useState('')
+  const [error, setError] = useState<string | null>(null)
   const createComment = useCreateComment(postId)
 
   if (!user) {
     return (
-      <p className="text-sm text-muted-foreground">Sign in to join the conversation.</p>
+      <p className="rounded-xl border border-dashed border-border-strong/70 px-4 py-3 text-sm text-muted-foreground">
+        <Link to="/login" className="font-medium text-primary hover:underline">
+          Sign in
+        </Link>{' '}
+        to join the conversation.
+      </p>
     )
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!body.trim()) return
-    await createComment.mutateAsync({
-      authorId: user!.id,
-      parentCommentId,
-      body: body.trim(),
-    })
+    setError(null)
+    try {
+      await createComment.mutateAsync({
+        authorId: user!.id,
+        parentCommentId,
+        body: body.trim(),
+      })
+    } catch (err) {
+      setError(
+        describeWriteError(
+          err,
+          'Your comment could not be posted. Please try again.',
+          "You can't comment here right now — this post may be locked, or you may be muted in this community.",
+        ),
+      )
+      return
+    }
     setBody('')
     onDone?.()
   }
@@ -48,6 +68,11 @@ export function CommentForm({
         placeholder={placeholder}
         minRows={3}
       />
+      {error && (
+        <p role="alert" className="text-sm text-danger">
+          {error}
+        </p>
+      )}
       <Button
         type="submit"
         size="sm"

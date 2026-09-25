@@ -5,11 +5,13 @@ import { ChevronDown, ChevronRight, MessageSquare, Pencil, Trash2 } from 'lucide
 import { Button } from '@/components/ui'
 import { MarkdownContent } from '@/components/MarkdownContent'
 import { MarkdownEditor } from '@/components/MarkdownEditor'
+import { ContributorFlair } from '@/features/reputation/components/ContributorFlair'
 import { VoteControl } from '@/features/voting/components/VoteControl'
 import { ReportDialog } from '@/features/reports/components/ReportDialog'
 import { ReactionBar } from '@/features/reactions/components/ReactionBar'
 import { useAuth } from '@/contexts/AuthContext'
 import { cn } from '@/utils/cn'
+import { avatarGradient } from '@/utils/avatarColor'
 import type { CommentNode } from '../types'
 import { useDeleteComment, useUpdateComment } from '../hooks/useComments'
 import { CommentForm } from './CommentForm'
@@ -67,16 +69,26 @@ export function CommentItem({
                 <ChevronDown className="h-3.5 w-3.5" />
               )}
             </button>
+            <span
+              aria-hidden="true"
+              className={cn(
+                'flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-semibold text-white',
+                avatarGradient(comment.author?.username ?? authorName),
+              )}
+            >
+              {authorName.charAt(0).toUpperCase()}
+            </span>
             {comment.author ? (
               <Link
                 to={`/u/${comment.author.username}`}
-                className="font-medium text-foreground hover:underline"
+                className="font-semibold text-foreground hover:text-primary"
               >
                 {authorName}
               </Link>
             ) : (
               <span className="font-medium text-foreground">{authorName}</span>
             )}
+            <ContributorFlair reputation={comment.author?.reputation_score} />
             <span>·</span>
             <span>
               {formatDistanceToNowStrict(new Date(comment.created_at), {

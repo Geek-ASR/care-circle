@@ -5,6 +5,8 @@ import { PrivacySettingsForm } from '@/features/profile/components/PrivacySettin
 import { NotificationSettingsForm } from '@/features/notifications/components/NotificationSettingsForm'
 import { BlockedUsersList } from '@/features/blocks/components/BlockedUsersList'
 import { useThemeStore } from '@/store/themeStore'
+import { PageHeader } from '@/components/PageHeader'
+import { Settings } from 'lucide-react'
 
 export default function SettingsPage() {
   const { theme, toggleTheme } = useThemeStore()
@@ -14,7 +16,12 @@ export default function SettingsPage() {
       <Helmet>
         <title>Settings · CareCircle</title>
       </Helmet>
-      <h1 className="mb-4 text-xl font-semibold text-foreground">Settings</h1>
+      <PageHeader
+        icon={Settings}
+        title="Settings"
+        description="Manage your profile, privacy and notifications."
+        className="mb-6"
+      />
 
       <Tabs defaultValue="profile">
         <TabsList>
@@ -24,11 +31,17 @@ export default function SettingsPage() {
           <TabsTrigger value="appearance">Appearance</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="profile">
+        <TabsContent
+          value="profile"
+          className="mt-5 rounded-2xl border border-border bg-surface p-5 shadow-xs sm:p-7"
+        >
           <ProfileSettingsForm />
         </TabsContent>
 
-        <TabsContent value="privacy" className="flex flex-col gap-6">
+        <TabsContent
+          value="privacy"
+          className="mt-5 flex flex-col gap-6 rounded-2xl border border-border bg-surface p-5 shadow-xs sm:p-7"
+        >
           <PrivacySettingsForm />
           <div>
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
@@ -38,12 +51,18 @@ export default function SettingsPage() {
           </div>
         </TabsContent>
 
-        <TabsContent value="notifications">
+        <TabsContent
+          value="notifications"
+          className="mt-5 rounded-2xl border border-border bg-surface p-5 shadow-xs sm:p-7"
+        >
           <NotificationSettingsForm />
         </TabsContent>
 
-        <TabsContent value="appearance">
-          <div className="flex items-center justify-between rounded-md border border-border p-4">
+        <TabsContent
+          value="appearance"
+          className="mt-5 rounded-2xl border border-border bg-surface p-5 shadow-xs sm:p-7"
+        >
+          <div className="flex items-center justify-between gap-4">
             <div>
               <Label htmlFor="theme-switch">Light theme</Label>
               <p className="text-xs text-muted-foreground">

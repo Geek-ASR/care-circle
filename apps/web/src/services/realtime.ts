@@ -76,3 +76,58 @@ export function trackPresence(
     void supabase.removeChannel(channel)
   }
 }
+
+interface RoomHandlers {
+  /** Called with the ids of everyone currently connected to the room. */
+  onPresence: (userIds: string[]) => void
+  /** Called whenever another participant signals they're typing. */
+  onTyping: (userId: string) => void
+}
+
+export interface RoomConnection {
+  sendTyping: () => void
+  leave: () => void
+}
+
+/**
+ * Ephemeral per-conversation room: Realtime presence for "online now" plus a
+ * broadcast channel for typing signals. Nothing here touches the database, so
+ * it costs no writes and leaves no trace once everyone disconnects.
+ *
+ * Unlike subscribeToTable, the topic must be identical for every participant
+ * (that's what puts them in the same room), so it gets no uniqueness suffix;
+ * callers must only hold one connection per conversation at a time.
+ */
+export function joinRoom(
+  roomName: string,
+  userId: string,
+  { onPresence, onTyping }: RoomHandlers,
+): RoomConnection {
+  const channel = supabase.channel(`room:${roomName}`, {
+    config: { presence: { key: userId }, broadcast: { self: false } },
+  })
+
+  channel
+    .on('presence', { event: 'sync' }, () => {
+      onPresence(Object.keys(channel.presenceState()))
+    })
+    .on('broadcast', { event: 'typing' }, ({ payload }) => {
+      const typingUserId = (payload as { userId?: unknown })?.userId
+      if (typeof typingUserId === 'string' && typingUserId !== userId)
+        onTyping(typingUserId)
+    })
+    .subscribe((status) => {
+      if (status === 'SUBSCRIBED') {
+        void channel.track({ online_at: new Date().toISOString() })
+      }
+    })
+
+  return {
+    sendTyping: () => {
+      void channel.send({ type: 'broadcast', event: 'typing', payload: { userId } })
+    },
+    leave: () => {
+      void supabase.removeChannel(channel)
+    },
+  }
+}

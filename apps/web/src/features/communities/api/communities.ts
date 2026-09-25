@@ -155,3 +155,13 @@ export async function leaveCommunity(communityId: string, userId: string) {
 
   if (error) throw error
 }
+
+export async function getCommunitySlugById(communityId: string): Promise<string | null> {
+  const { data, error } = await supabase
+    .from('communities')
+    .select('slug')
+    .eq('id', communityId)
+    .maybeSingle()
+  if (error) throw error
+  return (data as { slug: string } | null)?.slug ?? null
+}
