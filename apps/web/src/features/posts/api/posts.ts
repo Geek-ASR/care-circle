@@ -1,5 +1,5 @@
 import { supabase } from '@/services/supabaseClient'
-import type { PostType } from '@/types/database'
+import type { PostType, PostVersion } from '@/types/database'
 import type { CreatePostInput, PostSort, PostWithRelations } from '../types'
 
 const POST_SELECT =
@@ -161,4 +161,15 @@ export async function toggleLock(postId: string, isLocked: boolean) {
     .update({ is_locked: isLocked })
     .eq('id', postId)
   if (error) throw error
+}
+
+/** Previous versions of a post, newest first (RLS: author or community moderator). */
+export async function listPostVersions(postId: string): Promise<PostVersion[]> {
+  const { data, error } = await supabase
+    .from('post_versions')
+    .select('*')
+    .eq('post_id', postId)
+    .order('created_at', { ascending: false })
+  if (error) throw error
+  return data
 }

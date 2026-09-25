@@ -15,6 +15,8 @@ import { CommentThread } from '@/features/comments/components/CommentThread'
 import { BookmarkButton } from '@/features/bookmarks/components/BookmarkButton'
 import { ReportDialog } from '@/features/reports/components/ReportDialog'
 import { ModeratorPostActions } from '@/features/moderation/components/ModeratorPostActions'
+import { useIsModeratorOfCommunity } from '@/features/moderation/hooks/useModeration'
+import { EditHistoryDialog } from '@/features/posts/components/EditHistoryDialog'
 import { useAuth } from '@/contexts/AuthContext'
 import {
   usePost,
@@ -37,6 +39,7 @@ export default function PostPage() {
   const { data: media } = usePostMedia(post?.post_type === 'image' ? postId : undefined)
   const setPostStatus = useSetPostStatus()
   usePostRealtimeSync(postId)
+  const { isModerator } = useIsModeratorOfCommunity(post?.community_id)
 
   const [editing, setEditing] = useState(false)
   const [editTitle, setEditTitle] = useState('')
@@ -66,6 +69,7 @@ export default function PostPage() {
     if (!postId || !user) return
     await updatePostContent(postId, user.id, { title: editTitle, body: editBody || null })
     await queryClient.invalidateQueries({ queryKey: ['post', postId], exact: false })
+    await queryClient.invalidateQueries({ queryKey: ['post-versions', postId] })
     setEditing(false)
   }
 
@@ -220,6 +224,20 @@ export default function PostPage() {
                   </span>
                 )}
               </div>
+
+              {post.edited_at && (isOwner || isModerator) && (
+                <div className="mt-3">
+                  <EditHistoryDialog
+                    postId={post.id}
+                    current={{
+                      createdAt: post.created_at,
+                      title: post.title,
+                      body: post.body,
+                      editedAt: post.edited_at,
+                    }}
+                  />
+                </div>
+              )}
 
               <ModeratorPostActions
                 postId={post.id}

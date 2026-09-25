@@ -15,7 +15,9 @@ export default function SubmitPostPage() {
         description="Ask a question, share an experience, run a poll or review a treatment."
         className="mb-6"
       />
-      <CreatePostForm />
+      <div className="rounded-2xl border border-border bg-surface p-5 shadow-xs sm:p-7">
+        <CreatePostForm />
+      </div>
     </div>
   )
 }
