@@ -44,6 +44,9 @@ Recently completed (moved off this list):
   approvals are written to `audit_logs`. New UI: a per-community mod log,
   Make/Remove moderator and Step down in the Members tab, and Site roles +
   Audit log tabs for site admins.
+- Reputation recognition (migration 25): contributor flairs (Helpful
+  member / Trusted contributor / Community pillar) next to author names,
+  and a "Top contributors" card on each community page.
 
 ## M3 — Trust & safety
 
@@ -61,12 +64,6 @@ Recently completed (moved off this list):
 
 - [ ] **Admin analytics dashboard** — growth, activity and report-volume
       charts beyond the current overview counts.
-
-## M5 — Reputation
-
-- [ ] **Trusted-contributor signals** — surface high-reputation or
-      long-standing members (e.g. a flair on posts and comments).
-- [ ] **Leaderboards** per community.
 
 ## M6 — Polish
 

@@ -3,7 +3,7 @@ import { createNotification } from '@/features/notifications/api/notifications'
 import type { CommentWithAuthor } from '../types'
 
 const COMMENT_SELECT =
-  '*, author:profiles!comments_author_id_fkey(username, display_name, avatar_url)'
+  '*, author:profiles!comments_author_id_fkey(username, display_name, avatar_url, reputation_score)'
 
 export async function listComments(postId: string): Promise<CommentWithAuthor[]> {
   const { data, error } = await supabase

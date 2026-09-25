@@ -20,6 +20,7 @@ import type { PostSort } from '@/features/posts/types'
 import { useIsModeratorOfCommunity } from '@/features/moderation/hooks/useModeration'
 import { useMyRestriction } from '@/features/community-bans/hooks/useCommunityBans'
 import { RestrictionNotice } from '@/features/community-bans/components/RestrictionNotice'
+import { TopContributors } from '@/features/reputation/components/TopContributors'
 import NotFoundPage from './NotFoundPage'
 
 export default function CommunityPage() {
@@ -156,6 +157,8 @@ export default function CommunityPage() {
       </div>
 
       <aside className="flex flex-col gap-4">
+        <TopContributors communityId={community.id} />
+
         {rules && rules.length > 0 && (
           <div className="rounded-2xl border border-border bg-surface p-5 shadow-xs">
             <h2 className="mb-3 font-display text-sm font-semibold text-foreground">

@@ -3,7 +3,7 @@ import type { PostType, PostVersion } from '@/types/database'
 import type { CreatePostInput, PostSort, PostWithRelations } from '../types'
 
 const POST_SELECT =
-  '*, author:profiles!posts_author_id_fkey(username, display_name, avatar_url), community:communities(slug, name), post_media(storage_path, position), post_tags(tag:tags(id, name, slug))'
+  '*, author:profiles!posts_author_id_fkey(username, display_name, avatar_url, reputation_score), community:communities(slug, name), post_media(storage_path, position), post_tags(tag:tags(id, name, slug))'
 
 interface ListPostsParams {
   communityId?: string

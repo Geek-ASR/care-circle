@@ -33,7 +33,7 @@ export async function listBookmarkedPosts(userId: string): Promise<PostWithRelat
   const { data, error } = await supabase
     .from('bookmarks')
     .select(
-      'created_at, post:posts(*, author:profiles!posts_author_id_fkey(username, display_name, avatar_url), community:communities(slug, name), post_media(storage_path, position))',
+      'created_at, post:posts(*, author:profiles!posts_author_id_fkey(username, display_name, avatar_url, reputation_score), community:communities(slug, name), post_media(storage_path, position))',
     )
     .eq('user_id', userId)
     .order('created_at', { ascending: false })

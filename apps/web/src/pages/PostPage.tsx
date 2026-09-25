@@ -30,6 +30,7 @@ import { CommunityAvatar } from '@/components/CommunityAvatar'
 import { sharePost } from '@/features/posts/utils/share'
 import { useMyRestriction } from '@/features/community-bans/hooks/useCommunityBans'
 import { RestrictionNotice } from '@/features/community-bans/components/RestrictionNotice'
+import { ContributorFlair } from '@/features/reputation/components/ContributorFlair'
 import NotFoundPage from './NotFoundPage'
 
 export default function PostPage() {
@@ -122,6 +123,12 @@ export default function PostPage() {
                   </Link>
                 ) : (
                   authorName
+                )}
+                {post.author && (
+                  <ContributorFlair
+                    reputation={post.author.reputation_score}
+                    className="ml-1 align-[-2px]"
+                  />
                 )}{' '}
                 ·{' '}
                 {formatDistanceToNowStrict(new Date(post.created_at), {

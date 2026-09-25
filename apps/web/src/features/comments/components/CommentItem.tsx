@@ -5,6 +5,7 @@ import { ChevronDown, ChevronRight, MessageSquare, Pencil, Trash2 } from 'lucide
 import { Button } from '@/components/ui'
 import { MarkdownContent } from '@/components/MarkdownContent'
 import { MarkdownEditor } from '@/components/MarkdownEditor'
+import { ContributorFlair } from '@/features/reputation/components/ContributorFlair'
 import { VoteControl } from '@/features/voting/components/VoteControl'
 import { ReportDialog } from '@/features/reports/components/ReportDialog'
 import { ReactionBar } from '@/features/reactions/components/ReactionBar'
@@ -87,6 +88,7 @@ export function CommentItem({
             ) : (
               <span className="font-medium text-foreground">{authorName}</span>
             )}
+            <ContributorFlair reputation={comment.author?.reputation_score} />
             <span>·</span>
             <span>
               {formatDistanceToNowStrict(new Date(comment.created_at), {

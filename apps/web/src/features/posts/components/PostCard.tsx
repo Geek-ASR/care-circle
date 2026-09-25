@@ -3,6 +3,7 @@ import { formatDistanceToNowStrict } from 'date-fns'
 import { ExternalLink, MessageSquare, Pin, Share2 } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage, Badge } from '@/components/ui'
 import { CommunityAvatar } from '@/components/CommunityAvatar'
+import { ContributorFlair } from '@/features/reputation/components/ContributorFlair'
 import { VoteControl } from '@/features/voting/components/VoteControl'
 import { avatarGradient } from '@/utils/avatarColor'
 import { markdownExcerpt } from '@/utils/markdownExcerpt'
@@ -69,6 +70,12 @@ export function PostCard({
                   </Link>
                 ) : (
                   authorName
+                )}
+                {post.author && (
+                  <ContributorFlair
+                    reputation={post.author.reputation_score}
+                    className="ml-1 align-[-2px]"
+                  />
                 )}{' '}
                 · {timeAgo}
                 {post.edited_at && ' · edited'}
@@ -92,6 +99,10 @@ export function PostCard({
                   className="truncate text-[13px] font-semibold text-foreground hover:text-primary"
                 >
                   {authorName}
+                  <ContributorFlair
+                    reputation={post.author.reputation_score}
+                    className="ml-1 align-[-2px]"
+                  />
                 </Link>
               ) : (
                 <span className="text-[13px] font-semibold">{authorName}</span>
