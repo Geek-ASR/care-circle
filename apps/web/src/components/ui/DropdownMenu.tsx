@@ -9,7 +9,7 @@ export const DropdownMenuGroup = DropdownMenuPrimitive.Group
 export const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup
 
 const contentClasses = cn(
-  'z-50 min-w-40 overflow-hidden rounded-md border border-border bg-surface-raised p-1 shadow-lg',
+  'z-50 min-w-48 overflow-hidden rounded-xl border border-border bg-surface-raised p-1.5 shadow-lg',
   'transition-[opacity,transform] duration-100 ease-out',
   'data-[state=open]:opacity-100 data-[state=open]:scale-100',
   'data-[state=closed]:opacity-0 data-[state=closed]:scale-95',
@@ -37,7 +37,7 @@ export const DropdownMenuItem = forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      'relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-foreground outline-none',
+      'relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-2 text-sm text-foreground outline-none',
       'focus:bg-surface-hover data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       inset && 'pl-8',
       className,
@@ -132,7 +132,7 @@ export const DropdownMenuSubTrigger = forwardRef<
   <DropdownMenuPrimitive.SubTrigger
     ref={ref}
     className={cn(
-      'flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-foreground outline-none',
+      'flex cursor-pointer select-none items-center gap-2 rounded-md px-2.5 py-2 text-sm text-foreground outline-none',
       'focus:bg-surface-hover data-[state=open]:bg-surface-hover',
       inset && 'pl-8',
       className,

@@ -14,7 +14,7 @@ export const DialogContent = forwardRef<
   <DialogPrimitive.Portal>
     <DialogPrimitive.Overlay
       className={cn(
-        'fixed inset-0 z-50 bg-black/50 transition-opacity duration-150',
+        'fixed inset-0 z-50 bg-black/60 backdrop-blur-sm transition-opacity duration-150',
         'data-[state=open]:opacity-100 data-[state=closed]:opacity-0',
       )}
     />
@@ -22,7 +22,7 @@ export const DialogContent = forwardRef<
       ref={ref}
       className={cn(
         'fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2',
-        'rounded-lg border border-border bg-surface-raised p-6 shadow-lg',
+        'rounded-2xl border border-border bg-surface-raised p-6 shadow-lg',
         'transition-[opacity,transform] duration-150 ease-out',
         'data-[state=open]:scale-100 data-[state=open]:opacity-100',
         'data-[state=closed]:scale-95 data-[state=closed]:opacity-0',
@@ -59,7 +59,10 @@ export const DialogTitle = forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn('text-lg font-semibold text-foreground', className)}
+    className={cn(
+      'font-display text-lg font-semibold tracking-tight text-foreground',
+      className,
+    )}
     {...props}
   />
 ))

@@ -6,7 +6,7 @@ export const Card = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEleme
     <div
       ref={ref}
       className={cn(
-        'rounded-lg border border-border bg-surface text-foreground shadow-sm',
+        'rounded-xl border border-border bg-surface text-foreground shadow-xs',
         className,
       )}
       {...props}
@@ -19,7 +19,7 @@ export const CardHeader = forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn('flex flex-col gap-1 p-4', className)} {...props} />
+  <div ref={ref} className={cn('flex flex-col gap-1.5 p-5', className)} {...props} />
 ))
 CardHeader.displayName = 'CardHeader'
 
@@ -30,7 +30,10 @@ export const CardTitle = forwardRef<
   // oxlint-disable-next-line jsx-a11y/heading-has-content -- content is always provided via {...props}.children by callers
   <h3
     ref={ref}
-    className={cn('text-base font-semibold leading-tight text-foreground', className)}
+    className={cn(
+      'font-display text-base font-semibold leading-tight tracking-tight text-foreground',
+      className,
+    )}
     {...props}
   />
 ))
@@ -48,7 +51,7 @@ export const CardContent = forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn('p-4 pt-0', className)} {...props} />
+  <div ref={ref} className={cn('p-5 pt-0', className)} {...props} />
 ))
 CardContent.displayName = 'CardContent'
 
@@ -58,7 +61,7 @@ export const CardFooter = forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('flex items-center gap-2 p-4 pt-0', className)}
+    className={cn('flex items-center gap-2 p-5 pt-0', className)}
     {...props}
   />
 ))

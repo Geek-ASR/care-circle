@@ -38,8 +38,9 @@ export const SelectTrigger = forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      'flex h-10 w-full items-center justify-between rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground',
-      'focus:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+      'flex h-10 w-full items-center justify-between rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground shadow-xs',
+      'transition-[border-color,box-shadow] duration-150 hover:border-border-strong',
+      'focus:outline-none focus-visible:border-primary focus-visible:ring-4 focus-visible:ring-ring/60',
       'disabled:cursor-not-allowed disabled:opacity-50',
       className,
     )}
