@@ -94,6 +94,8 @@
 | `reports` | A member's report of a post/comment/user/message. | `reporter_id` (nullable), `target_type`/`target_id`, `reason`, `status`, `reviewed_by` | → `profiles`; `target_type`/`target_id` polymorphic, resolved by the app. |
 | `moderation_actions` | Community-scoped moderator action log (remove post, ban user, lock thread, ...). Immutable — no update/delete. | `moderator_id`, `community_id`, `action_type`, `target_type`/`target_id` | → `profiles`, → `communities`. |
 | `community_bans` | Per-community mutes and bans (`kind`), optionally temporary via `expires_at`. Unique per (community, user, kind). Enforced in post/comment/join insert policies via `is_restricted_from()`; an AFTER trigger logs a `moderation_actions` row, removes banned members and sends an anonymous `moderator_message` notification. | `community_id`, `user_id`, `kind`, `reason`, `expires_at`, `created_by` | → `communities`, → `profiles` (user and moderator). |
+
+Rate limits (`20260101000023_rate_limits.sql`): a generic `enforce_rate_limit()` BEFORE INSERT trigger rejects end-user inserts past a per-window threshold — posts 5/10 min, comments 20/5 min, messages 30/min, reports 10/hour, communities 3/day. Admins and inserts without `auth.uid()` (seeds, jobs) are exempt. Errors carry SQLSTATE `P0001` and a `rate_limit_exceeded` message prefix the client maps to a friendly notice.
 | `audit_logs` | Site-wide admin audit trail (role grants, community approvals). Immutable. | `actor_id`, `action`, `metadata` (jsonb) | → `profiles`. |
 | `activity_logs` | Per-user "recent activity" feed. | `user_id`, `action_type`, `metadata` (jsonb) | → `profiles`. |
 

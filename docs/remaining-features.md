@@ -35,14 +35,14 @@ Recently completed (moved off this list):
   to `moderation_actions`, with an anonymous notification to the member, a
   Members tab for moderators, "Restrict author" on posts, and clear notices
   for restricted users.
+- Rate limiting (migration 23): per-user limits on posts, comments,
+  messages, reports and community requests, with friendly "slow down"
+  messages in the app.
 
 ## M3 — Trust & safety
 
 - [ ] **Formal warnings** — `warn_user` is still unused; bans and mutes are
       done (see below).
-- [ ] **Rate limiting** — nothing throttles post, comment, message, report or
-      vote creation. Add per-user limits (e.g. a Postgres function checked in
-      insert policies, or Supabase Edge Functions in front of writes).
 - [ ] **Mute users** (softer than block) — hide someone's content without
       the hard block semantics.
 - [ ] **Keyword / link filters** — automatic hold-for-review of posts that
