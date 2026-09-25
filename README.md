@@ -39,12 +39,15 @@ is in [`docs/deployment-guide.md`](./docs/deployment-guide.md).
 | [`docs/deployment-guide.md`](./docs/deployment-guide.md) | Zero-to-live-app setup walkthrough |
 | [`docs/environment-variables.md`](./docs/environment-variables.md) | Every env var/secret: where it's used, where to find it, security notes |
 | [`docs/contributing.md`](./docs/contributing.md) | Branch/commit conventions, pre-PR checks, migration workflow, feature-folder layout |
+| [`docs/remaining-features.md`](./docs/remaining-features.md) | Checklist of what's not built yet, grouped by milestone |
 
 ## Project status
 
 Actively developed, milestone by milestone — see the
 [roadmap in `docs/architecture.md`](./docs/architecture.md#milestone-roadmap)
-for what's built, what's in progress, and what's design-doc-only for now.
+for the milestone plan, and
+[`docs/remaining-features.md`](./docs/remaining-features.md) for a concrete
+checklist of what's still left to build.
 
 ## CI/CD
 
