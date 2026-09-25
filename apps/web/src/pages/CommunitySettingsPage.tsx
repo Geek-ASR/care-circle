@@ -7,6 +7,7 @@ import {
   ListOrdered,
   Settings2,
   ShieldAlert,
+  Users,
 } from 'lucide-react'
 import { Skeleton, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { PageHeader } from '@/components/PageHeader'
@@ -17,9 +18,10 @@ import { CommunityDetailsForm } from '@/features/communities/components/settings
 import { RulesEditor } from '@/features/communities/components/settings/RulesEditor'
 import { ResourcesEditor } from '@/features/communities/components/settings/ResourcesEditor'
 import { WikiEditor } from '@/features/communities/components/settings/WikiEditor'
+import { MembersManager } from '@/features/community-bans/components/MembersManager'
 import NotFoundPage from './NotFoundPage'
 
-const TABS = ['general', 'rules', 'resources', 'wiki'] as const
+const TABS = ['general', 'members', 'rules', 'resources', 'wiki'] as const
 type Tab = (typeof TABS)[number]
 
 const cardClasses =
@@ -99,6 +101,9 @@ export default function CommunitySettingsPage() {
           <TabsTrigger value="general" className="flex items-center gap-1.5">
             <Settings2 className="h-3.5 w-3.5" /> General
           </TabsTrigger>
+          <TabsTrigger value="members" className="flex items-center gap-1.5">
+            <Users className="h-3.5 w-3.5" /> Members
+          </TabsTrigger>
           <TabsTrigger value="rules" className="flex items-center gap-1.5">
             <ListOrdered className="h-3.5 w-3.5" /> Rules
           </TabsTrigger>
@@ -112,6 +117,9 @@ export default function CommunitySettingsPage() {
 
         <TabsContent value="general" className={cardClasses}>
           <CommunityDetailsForm community={community} />
+        </TabsContent>
+        <TabsContent value="members" className={cardClasses}>
+          <MembersManager communityId={community.id} />
         </TabsContent>
         <TabsContent value="rules" className={cardClasses}>
           <RulesEditor communityId={community.id} />

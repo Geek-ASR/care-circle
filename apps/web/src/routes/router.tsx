@@ -23,6 +23,7 @@ const FollowersPage = lazy(() => import('@/pages/FollowersPage'))
 const FollowingPage = lazy(() => import('@/pages/FollowingPage'))
 const CreateCommunityPage = lazy(() => import('@/pages/CreateCommunityPage'))
 const CommunitySettingsPage = lazy(() => import('@/pages/CommunitySettingsPage'))
+const CommunityRedirectPage = lazy(() => import('@/pages/CommunityRedirectPage'))
 const ModerationPage = lazy(() => import('@/pages/ModerationPage'))
 const ResourcesPage = lazy(() => import('@/pages/ResourcesPage'))
 const SymptomCheckerPage = lazy(() => import('@/pages/SymptomCheckerPage'))
@@ -48,6 +49,7 @@ export const router = createBrowserRouter(
             { path: '/resources', element: <ResourcesPage /> },
             { path: '/symptom-checker', element: <SymptomCheckerPage /> },
             { path: '/r/:slug', element: <CommunityPage /> },
+            { path: '/community/:communityId', element: <CommunityRedirectPage /> },
             { path: '/r/:slug/wiki/:wikiSlug', element: <WikiPagePage /> },
             { path: '/posts/:postId', element: <PostPage /> },
             { path: '/u/:username', element: <ProfilePage /> },

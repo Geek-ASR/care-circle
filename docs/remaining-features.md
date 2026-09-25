@@ -30,14 +30,16 @@ Recently completed (moved off this list):
 - Post edit history viewer (author and moderators).
 - Private reputation history on your own profile.
 - Chat typing indicators and online presence.
+- Community bans and mutes (`community_bans`, migration 22): temporary or
+  permanent, enforced in RLS for posting, commenting and rejoining, logged
+  to `moderation_actions`, with an anonymous notification to the member, a
+  Members tab for moderators, "Restrict author" on posts, and clear notices
+  for restricted users.
 
 ## M3 — Trust & safety
 
-- [ ] **Community bans, mutes and warnings** 🗄️ — `moderation_actions`
-      already allows `warn_user`, `mute_user`, `temp_ban` and `ban_user`, but
-      the UI only issues `remove_*`, `pin_post` and `lock_post`. Needs a
-      member-management screen for moderators and enforcement in RLS
-      (banned/muted users can't post or comment in that community).
+- [ ] **Formal warnings** — `warn_user` is still unused; bans and mutes are
+      done (see below).
 - [ ] **Rate limiting** — nothing throttles post, comment, message, report or
       vote creation. Add per-user limits (e.g. a Postgres function checked in
       insert policies, or Supabase Edge Functions in front of writes).

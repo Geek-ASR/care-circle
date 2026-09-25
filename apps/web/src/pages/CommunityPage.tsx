@@ -18,6 +18,8 @@ import { PostList } from '@/features/posts/components/PostList'
 import { PostSortTabs } from '@/features/posts/components/PostSortTabs'
 import type { PostSort } from '@/features/posts/types'
 import { useIsModeratorOfCommunity } from '@/features/moderation/hooks/useModeration'
+import { useMyRestriction } from '@/features/community-bans/hooks/useCommunityBans'
+import { RestrictionNotice } from '@/features/community-bans/components/RestrictionNotice'
 import NotFoundPage from './NotFoundPage'
 
 export default function CommunityPage() {
@@ -29,6 +31,7 @@ export default function CommunityPage() {
   const { data: wikiPages } = useWikiPages(community?.id)
   const [sort, setSort] = useState<PostSort>('hot')
   const { isModerator } = useIsModeratorOfCommunity(community?.id)
+  const { restriction } = useMyRestriction(community?.id)
 
   if (isLoading) {
     return (
@@ -96,14 +99,16 @@ export default function CommunityPage() {
                     </Link>
                   </Button>
                 )}
-                {user && (
+                {user && !restriction && (
                   <Button asChild variant="outline" size="sm">
                     <Link to={`/submit?community=${community.slug}`}>
                       <Plus className="h-4 w-4" /> Create post
                     </Link>
                   </Button>
                 )}
-                <JoinLeaveButton communityId={community.id} />
+                {restriction?.kind !== 'ban' && (
+                  <JoinLeaveButton communityId={community.id} />
+                )}
               </div>
             </div>
             <div className="mt-3">
@@ -144,6 +149,7 @@ export default function CommunityPage() {
       </div>
 
       <div className="flex min-w-0 flex-col gap-4">
+        {restriction && <RestrictionNotice restriction={restriction} />}
         <PostSortTabs value={sort} onChange={setSort} />
 
         <PostList communityId={community.id} sort={sort} showCommunity={false} />

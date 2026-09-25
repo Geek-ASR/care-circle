@@ -17,37 +17,7 @@ import {
   useMarkNotificationRead,
   useNotifications,
 } from '../hooks/useNotifications'
-import type { NotificationWithActor } from '../api/notifications'
-
-function notificationMessage(notification: NotificationWithActor): string {
-  const actor =
-    notification.actor?.display_name ?? notification.actor?.username ?? 'Someone'
-  switch (notification.type) {
-    case 'reply':
-      return `${actor} replied to you`
-    case 'mention':
-      return `${actor} mentioned you`
-    case 'upvote':
-      return `${actor} upvoted your post`
-    case 'follow':
-      return `${actor} started following you`
-    case 'moderator_message':
-      return `New message from a moderator`
-    case 'announcement':
-      return `New community announcement`
-    case 'badge_earned':
-      return `You earned a new badge`
-    default:
-      return 'New notification'
-  }
-}
-
-function notificationHref(notification: NotificationWithActor): string {
-  if (notification.target_type === 'post' && notification.target_id) {
-    return `/posts/${notification.target_id}`
-  }
-  return '/notifications'
-}
+import { notificationHref, notificationMessage } from '../utils/format'
 
 export function NotificationBell() {
   const { user } = useAuth()

@@ -28,6 +28,8 @@ import { getPostMediaUrl } from '@/features/posts/api/postMedia'
 import { updatePostContent } from '@/features/posts/api/posts'
 import { CommunityAvatar } from '@/components/CommunityAvatar'
 import { sharePost } from '@/features/posts/utils/share'
+import { useMyRestriction } from '@/features/community-bans/hooks/useCommunityBans'
+import { RestrictionNotice } from '@/features/community-bans/components/RestrictionNotice'
 import NotFoundPage from './NotFoundPage'
 
 export default function PostPage() {
@@ -40,6 +42,7 @@ export default function PostPage() {
   const setPostStatus = useSetPostStatus()
   usePostRealtimeSync(postId)
   const { isModerator } = useIsModeratorOfCommunity(post?.community_id)
+  const { restriction } = useMyRestriction(post?.community_id)
 
   const [editing, setEditing] = useState(false)
   const [editTitle, setEditTitle] = useState('')
@@ -242,6 +245,11 @@ export default function PostPage() {
               <ModeratorPostActions
                 postId={post.id}
                 communityId={post.community_id}
+                author={
+                  post.author_id && post.author && !isOwner
+                    ? { id: post.author_id, name: authorName }
+                    : null
+                }
                 isPinned={post.is_pinned}
                 isLocked={post.is_locked}
               />
@@ -280,7 +288,12 @@ export default function PostPage() {
           This post is locked. New comments are disabled.
         </p>
       ) : (
-        <CommentThread postId={post.id} />
+        <CommentThread
+          postId={post.id}
+          readOnlyNotice={
+            restriction ? <RestrictionNotice restriction={restriction} /> : undefined
+          }
+        />
       )}
     </div>
   )

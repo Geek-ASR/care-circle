@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui'
 import { MarkdownEditor } from '@/components/MarkdownEditor'
 import { useAuth } from '@/contexts/AuthContext'
+import { isPermissionDenied } from '@/features/community-bans/utils/restrictions'
 import { useCreateComment } from '../hooks/useComments'
 
 interface CommentFormProps {
@@ -21,6 +22,7 @@ export function CommentForm({
 }: CommentFormProps) {
   const { user } = useAuth()
   const [body, setBody] = useState('')
+  const [error, setError] = useState<string | null>(null)
   const createComment = useCreateComment(postId)
 
   if (!user) {
@@ -37,11 +39,21 @@ export function CommentForm({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!body.trim()) return
-    await createComment.mutateAsync({
-      authorId: user!.id,
-      parentCommentId,
-      body: body.trim(),
-    })
+    setError(null)
+    try {
+      await createComment.mutateAsync({
+        authorId: user!.id,
+        parentCommentId,
+        body: body.trim(),
+      })
+    } catch (err) {
+      setError(
+        isPermissionDenied(err)
+          ? "You can't comment here right now — this post may be locked, or you may be muted in this community."
+          : 'Your comment could not be posted. Please try again.',
+      )
+      return
+    }
     setBody('')
     onDone?.()
   }
@@ -54,6 +66,11 @@ export function CommentForm({
         placeholder={placeholder}
         minRows={3}
       />
+      {error && (
+        <p role="alert" className="text-sm text-danger">
+          {error}
+        </p>
+      )}
       <Button
         type="submit"
         size="sm"

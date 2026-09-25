@@ -448,6 +448,19 @@ export interface Report {
   reviewed_at: ISODateString | null
 }
 
+export type CommunityBanKind = 'ban' | 'mute'
+
+export interface CommunityBan {
+  id: UUID
+  community_id: UUID
+  user_id: UUID
+  kind: CommunityBanKind
+  reason: string | null
+  expires_at: ISODateString | null
+  created_by: UUID | null
+  created_at: ISODateString
+}
+
 export interface ModerationAction {
   id: UUID
   moderator_id: UUID | null

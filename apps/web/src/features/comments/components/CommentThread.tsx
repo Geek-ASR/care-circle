@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { MessagesSquare } from 'lucide-react'
 import { Skeleton } from '@/components/ui'
 import { useCommentsRealtimeSync, useCommentTree } from '../hooks/useComments'
@@ -7,7 +7,14 @@ import { CommentForm } from './CommentForm'
 import { CommentItem } from './CommentItem'
 import { CommentSortTabs } from './CommentSortTabs'
 
-export function CommentThread({ postId }: { postId: string }) {
+export function CommentThread({
+  postId,
+  readOnlyNotice,
+}: {
+  postId: string
+  /** When set, shown in place of the new-comment box (e.g. the user is muted). */
+  readOnlyNotice?: ReactNode
+}) {
   const [sort, setSort] = useState<CommentSort>('best')
   const { tree, count, isLoading } = useCommentTree(postId, sort)
   useCommentsRealtimeSync(postId)
@@ -17,7 +24,7 @@ export function CommentThread({ postId }: { postId: string }) {
       className="flex flex-col gap-5 rounded-2xl border border-border bg-surface p-5 shadow-xs sm:p-7"
       aria-label="Comments"
     >
-      <CommentForm postId={postId} />
+      {readOnlyNotice ?? <CommentForm postId={postId} />}
 
       <div className="flex items-center justify-between">
         <h2 className="flex items-center gap-2 font-display text-base font-semibold text-foreground">
