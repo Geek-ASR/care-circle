@@ -7,6 +7,7 @@ import {
   ListOrdered,
   Settings2,
   ShieldAlert,
+  ScrollText,
   Users,
 } from 'lucide-react'
 import { Skeleton, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
@@ -19,9 +20,10 @@ import { RulesEditor } from '@/features/communities/components/settings/RulesEdi
 import { ResourcesEditor } from '@/features/communities/components/settings/ResourcesEditor'
 import { WikiEditor } from '@/features/communities/components/settings/WikiEditor'
 import { MembersManager } from '@/features/community-bans/components/MembersManager'
+import { ModerationLog } from '@/features/governance/components/ModerationLog'
 import NotFoundPage from './NotFoundPage'
 
-const TABS = ['general', 'members', 'rules', 'resources', 'wiki'] as const
+const TABS = ['general', 'members', 'rules', 'resources', 'wiki', 'log'] as const
 type Tab = (typeof TABS)[number]
 
 const cardClasses =
@@ -113,13 +115,16 @@ export default function CommunitySettingsPage() {
           <TabsTrigger value="wiki" className="flex items-center gap-1.5">
             <BookOpen className="h-3.5 w-3.5" /> Wiki
           </TabsTrigger>
+          <TabsTrigger value="log" className="flex items-center gap-1.5">
+            <ScrollText className="h-3.5 w-3.5" /> Mod log
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="general" className={cardClasses}>
           <CommunityDetailsForm community={community} />
         </TabsContent>
         <TabsContent value="members" className={cardClasses}>
-          <MembersManager communityId={community.id} />
+          <MembersManager communityId={community.id} createdBy={community.created_by} />
         </TabsContent>
         <TabsContent value="rules" className={cardClasses}>
           <RulesEditor communityId={community.id} />
@@ -133,6 +138,9 @@ export default function CommunitySettingsPage() {
             communitySlug={community.slug}
             initialPageSlug={searchParams.get('page')}
           />
+        </TabsContent>
+        <TabsContent value="log" className={cardClasses}>
+          <ModerationLog communityId={community.id} />
         </TabsContent>
       </Tabs>
     </div>

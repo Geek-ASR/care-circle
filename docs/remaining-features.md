@@ -38,6 +38,12 @@ Recently completed (moved off this list):
 - Rate limiting (migration 23): per-user limits on posts, comments,
   messages, reports and community requests, with friendly "slow down"
   messages in the app.
+- Governance and audit (migration 24): moderators can appoint moderators;
+  only the creator, a community admin or a site admin can demote or remove
+  one; the last site admin can't be revoked. Role changes and community
+  approvals are written to `audit_logs`. New UI: a per-community mod log,
+  Make/Remove moderator and Step down in the Members tab, and Site roles +
+  Audit log tabs for site admins.
 
 ## M3 — Trust & safety
 
@@ -53,14 +59,6 @@ Recently completed (moved off this list):
 
 ## M4 — Admin & governance
 
-- [ ] **Audit log viewer** 🗄️ — `audit_logs` and `activity_logs` are
-      written to but no screen reads them.
-- [ ] **Moderation log per community** 🗄️ — a public or mod-only history of
-      `moderation_actions` for transparency.
-- [ ] **Role management UI** 🗄️ — `roles`, `permissions`, `role_permissions`
-      and `user_roles` exist (used by RLS to detect site admins), but there's
-      no way to grant or revoke roles from the app.
-- [ ] **Appoint / remove moderators** from the community page.
 - [ ] **Admin analytics dashboard** — growth, activity and report-volume
       charts beyond the current overview counts.
 

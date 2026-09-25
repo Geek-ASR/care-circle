@@ -1,7 +1,9 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { format, formatDistanceToNowStrict } from 'date-fns'
-import { Ban, Search, ShieldCheck, VolumeX } from 'lucide-react'
+import { Ban, Search, ShieldCheck, ShieldMinus, ShieldPlus, VolumeX } from 'lucide-react'
+import { useIsSiteAdmin } from '@/features/moderation/hooks/useModeration'
+import { useSetMemberRole } from '@/features/governance/hooks/useGovernance'
 import {
   Avatar,
   AvatarFallback,
@@ -63,12 +65,28 @@ function Person({
   )
 }
 
-export function MembersManager({ communityId }: { communityId: string }) {
+export function MembersManager({
+  communityId,
+  createdBy,
+}: {
+  communityId: string
+  /** The community's creator, who (with admins) may demote other moderators. */
+  createdBy: string | null
+}) {
   const { user } = useAuth()
+  const { data: isSiteAdmin } = useIsSiteAdmin()
+  const setRole = useSetMemberRole(communityId)
   const { data: members, isLoading: isLoadingMembers } = useCommunityMembers(communityId)
   const { data: bans, isLoading: isLoadingBans } = useCommunityBans(communityId)
   const lift = useLiftRestriction(communityId)
   const [query, setQuery] = useState('')
+
+  const myRole = members?.find((m) => m.user_id === user?.id)?.role
+  // Mirrors can_manage_moderators() in the database; the server enforces it.
+  const canManageModerators =
+    Boolean(isSiteAdmin) ||
+    (createdBy !== null && createdBy === user?.id) ||
+    myRole === 'admin'
 
   const activeBans = useMemo(() => (bans ?? []).filter((b) => isActive(b)), [bans])
   const restrictedIds = useMemo(
@@ -207,6 +225,40 @@ export function MembersManager({ communityId }: { communityId: string }) {
                   </Badge>
                 )}
                 {restriction === 'mute' && <Badge variant="warning">Muted</Badge>}
+                {member.role === 'member' && !restriction && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    disabled={setRole.isPending}
+                    onClick={() => {
+                      if (window.confirm(`Make ${name} a moderator of this community?`)) {
+                        setRole.mutate({ userId: member.user_id, role: 'moderator' })
+                      }
+                    }}
+                  >
+                    <ShieldPlus className="h-4 w-4" /> Make moderator
+                  </Button>
+                )}
+                {member.role === 'moderator' && (isSelf || canManageModerators) && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    disabled={setRole.isPending}
+                    onClick={() => {
+                      const question = isSelf
+                        ? 'Step down as a moderator? You will lose access to these settings.'
+                        : `Remove ${name} as a moderator?`
+                      if (window.confirm(question)) {
+                        setRole.mutate({ userId: member.user_id, role: 'member' })
+                      }
+                    }}
+                  >
+                    <ShieldMinus className="h-4 w-4" />{' '}
+                    {isSelf ? 'Step down' : 'Remove moderator'}
+                  </Button>
+                )}
                 {!isStaff && !isSelf && (
                   <div className="flex items-center gap-1">
                     <RestrictUserDialog
