@@ -31,6 +31,7 @@ import { AwardBadgeDialog } from '@/features/badges/components/AwardBadgeDialog'
 import { AchievementList } from '@/features/achievements/components/AchievementList'
 import { EmptyState } from '@/components/EmptyState'
 import { avatarGradient } from '@/utils/avatarColor'
+import { ReputationHistory } from '@/features/reputation/components/ReputationHistory'
 import NotFoundPage from './NotFoundPage'
 
 export default function ProfilePage() {
@@ -189,6 +190,8 @@ export default function ProfilePage() {
       </section>
 
       <AchievementList userId={profile.id} showInProgress={user?.id === profile.id} />
+
+      {user?.id === profile.id && <ReputationHistory userId={profile.id} />}
 
       <div className="flex flex-col gap-3">
         <h2 className="font-display text-lg font-semibold text-foreground">Posts</h2>

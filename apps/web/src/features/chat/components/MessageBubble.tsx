@@ -1,6 +1,7 @@
 import { format } from 'date-fns'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui'
 import { cn } from '@/utils/cn'
+import { avatarGradient } from '@/utils/avatarColor'
 import type { MessageWithSender } from '../types'
 
 export function MessageBubble({
@@ -18,7 +19,11 @@ export function MessageBubble({
       {!isOwn && (
         <Avatar className="h-7 w-7 shrink-0">
           <AvatarImage src={message.sender?.avatar_url ?? undefined} alt="" />
-          <AvatarFallback className="text-xs">{initials}</AvatarFallback>
+          <AvatarFallback
+            className={`${avatarGradient(message.sender?.username ?? name)} text-xs font-semibold text-white`}
+          >
+            {initials}
+          </AvatarFallback>
         </Avatar>
       )}
       <div className={cn('flex max-w-[75%] flex-col gap-0.5', isOwn && 'items-end')}>
@@ -26,8 +31,8 @@ export function MessageBubble({
           className={cn(
             'whitespace-pre-wrap break-words rounded-2xl px-3.5 py-2 text-sm',
             isOwn
-              ? 'rounded-br-sm bg-primary text-primary-foreground'
-              : 'rounded-bl-sm bg-surface-hover text-foreground',
+              ? 'rounded-br-md bg-primary text-primary-foreground shadow-sm'
+              : 'rounded-bl-md border border-border bg-surface-raised text-foreground',
           )}
         >
           {message.body}
