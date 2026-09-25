@@ -20,6 +20,17 @@ tracker with trends, condition resources directory, symptom checker, PWA
 install, and the redesigned UI (design tokens, brand identity, landing page,
 app shell, feed, community/post/profile pages, light + dark themes).
 
+Recently completed (moved off this list):
+
+- Community settings for moderators — edit description, logo, banner, rules
+  (with reordering), resources and wiki pages at `/r/:slug/settings`.
+- Wiki editing (create / edit / delete, version counter) with an "Edit page"
+  shortcut on each wiki page for moderators.
+- Draft autosave for the post composer, with a "restore your draft" prompt.
+- Post edit history viewer (author and moderators).
+- Private reputation history on your own profile.
+- Chat typing indicators and online presence.
+
 ## M3 — Trust & safety
 
 - [ ] **Community bans, mutes and warnings** 🗄️ — `moderation_actions`
@@ -47,31 +58,24 @@ app shell, feed, community/post/profile pages, light + dark themes).
 - [ ] **Role management UI** 🗄️ — `roles`, `permissions`, `role_permissions`
       and `user_roles` exist (used by RLS to detect site admins), but there's
       no way to grant or revoke roles from the app.
-- [ ] **Community settings for moderators** — edit description, banner,
-      logo, rules, resources and wiki pages from the UI (today these can only
-      be changed directly in the database; wiki pages are read-only).
 - [ ] **Appoint / remove moderators** from the community page.
 - [ ] **Admin analytics dashboard** — growth, activity and report-volume
       charts beyond the current overview counts.
 
 ## M5 — Reputation
 
-- [ ] **Reputation history** 🗄️ — `reputation_events` records every change,
-      but profiles only show the running total.
 - [ ] **Trusted-contributor signals** — surface high-reputation or
       long-standing members (e.g. a flair on posts and comments).
 - [ ] **Leaderboards** per community.
 
 ## M6 — Polish
 
-- [ ] **Draft autosave** 🗄️ — the `drafts` table exists but the post and
-      comment editors don't autosave or restore drafts.
-- [ ] **Post edit history** 🗄️ — edits are stored in `post_versions` but
-      there's no "view previous versions" UI.
-- [ ] **Chat upgrades** — typing indicators and online presence (Supabase
-      Realtime presence), image attachments, message edit/delete, and
-      community group chats (`conversations.is_group` / `community_id` exist
-      🗄️ but only 1:1 DMs have UI).
+- [ ] **Comment draft autosave** — post drafts autosave; comment and reply
+      boxes don't yet.
+- [ ] **Chat upgrades** — image attachments, message edit/delete, read
+      receipts in the thread, and community group chats
+      (`conversations.is_group` / `community_id` exist 🗄️ but only 1:1 DMs
+      have UI).
 - [ ] **Rich text editor** — optional upgrade from Markdown textarea to a
       WYSIWYG editor (e.g. Tiptap), as noted in the architecture doc.
 - [ ] **Accessibility audit** — full keyboard and screen-reader pass with
