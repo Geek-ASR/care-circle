@@ -1,5 +1,7 @@
 import { Helmet } from 'react-helmet-async'
 import { CreatePostForm } from '@/features/posts/components/CreatePostForm'
+import { PageHeader } from '@/components/PageHeader'
+import { PenSquare } from 'lucide-react'
 
 export default function SubmitPostPage() {
   return (
@@ -7,7 +9,12 @@ export default function SubmitPostPage() {
       <Helmet>
         <title>Create post · CareCircle</title>
       </Helmet>
-      <h1 className="mb-4 text-xl font-semibold text-foreground">Create a post</h1>
+      <PageHeader
+        icon={PenSquare}
+        title="Create a post"
+        description="Ask a question, share an experience, run a poll or review a treatment."
+        className="mb-6"
+      />
       <CreatePostForm />
     </div>
   )

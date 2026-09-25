@@ -16,6 +16,8 @@ import {
 } from '@/features/symptom-checker/hooks/useSymptomChecker'
 import { computeSymptomMatches } from '@/features/symptom-checker/lib/matching'
 import type { SymptomCheckAnswers, SymptomCheckResult } from '@/types/database'
+import { PageHeader } from '@/components/PageHeader'
+import { ListChecks } from 'lucide-react'
 
 type Step = 'symptoms' | 'questions' | 'results'
 
@@ -73,12 +75,11 @@ export default function SymptomCheckerPage() {
       <Helmet>
         <title>Symptom Checker · CareCircle</title>
       </Helmet>
-      <div>
-        <h1 className="text-xl font-semibold text-foreground">Symptom Checker</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Not a diagnosis — a way to find your community.
-        </p>
-      </div>
+      <PageHeader
+        icon={ListChecks}
+        title="Symptom checker"
+        description="Not a diagnosis — a way to find people and communities who share what you're experiencing."
+      />
 
       <Tabs defaultValue="check">
         <TabsList>
@@ -86,7 +87,10 @@ export default function SymptomCheckerPage() {
           <TabsTrigger value="history">History</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="check" className="mt-4 flex flex-col gap-4">
+        <TabsContent
+          value="check"
+          className="mt-5 flex flex-col gap-5 rounded-2xl border border-border bg-surface p-5 shadow-xs sm:p-7"
+        >
           <MedicalDisclaimer />
 
           {step === 'symptoms' && (

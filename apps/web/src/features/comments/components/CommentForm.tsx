@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import { Button } from '@/components/ui'
 import { MarkdownEditor } from '@/components/MarkdownEditor'
@@ -24,7 +25,12 @@ export function CommentForm({
 
   if (!user) {
     return (
-      <p className="text-sm text-muted-foreground">Sign in to join the conversation.</p>
+      <p className="rounded-xl border border-dashed border-border-strong/70 px-4 py-3 text-sm text-muted-foreground">
+        <Link to="/login" className="font-medium text-primary hover:underline">
+          Sign in
+        </Link>{' '}
+        to join the conversation.
+      </p>
     )
   }
 

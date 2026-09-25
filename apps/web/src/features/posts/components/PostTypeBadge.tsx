@@ -1,4 +1,4 @@
-import { Badge } from '@/components/ui'
+import { Badge, type BadgeProps } from '@/components/ui'
 import type { PostType } from '@/types/database'
 
 const LABELS: Record<PostType, string> = {
@@ -17,6 +17,20 @@ const LABELS: Record<PostType, string> = {
   lifestyle_tip: 'Lifestyle tip',
 }
 
+// Color-codes the kinds of post people scan for most (questions, reviews, wins),
+// so the feed is skimmable; everyday discussion stays neutral.
+const VARIANTS: Partial<Record<PostType, BadgeProps['variant']>> = {
+  question: 'accent',
+  poll: 'primary',
+  success_story: 'success',
+  treatment_review: 'warning',
+  medication_review: 'warning',
+  doctor_review: 'warning',
+  hospital_review: 'warning',
+  research_discussion: 'accent',
+  lifestyle_tip: 'success',
+}
+
 export function PostTypeBadge({ postType }: { postType: PostType }) {
-  return <Badge variant="outline">{LABELS[postType]}</Badge>
+  return <Badge variant={VARIANTS[postType] ?? 'outline'}>{LABELS[postType]}</Badge>
 }

@@ -26,7 +26,7 @@ export default function FollowingPage() {
       <Helmet>
         <title>Following · {profile.display_name ?? profile.username} · CareCircle</title>
       </Helmet>
-      <h1 className="text-xl font-semibold text-foreground">
+      <h1 className="font-display text-2xl font-bold tracking-tight text-foreground">
         {profile.display_name ?? profile.username}&apos;s following
       </h1>
       <FollowListItems

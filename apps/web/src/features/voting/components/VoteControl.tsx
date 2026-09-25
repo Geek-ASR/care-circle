@@ -24,8 +24,12 @@ export function VoteControl({
   return (
     <div
       className={cn(
-        'flex items-center gap-1',
-        orientation === 'vertical' ? 'flex-col' : 'flex-row',
+        'flex items-center gap-0.5',
+        orientation === 'vertical'
+          ? 'flex-col'
+          : 'flex-row rounded-full border border-border bg-surface-sunken p-0.5',
+        vote.userVote === 1 && orientation === 'horizontal' && 'border-primary/40',
+        vote.userVote === -1 && orientation === 'horizontal' && 'border-danger/40',
       )}
     >
       <button
@@ -34,7 +38,7 @@ export function VoteControl({
         aria-label="Upvote"
         onClick={() => vote.vote(1)}
         className={cn(
-          'rounded-md p-1 text-muted-foreground transition-colors hover:bg-surface-hover hover:text-primary',
+          'rounded-full p-1 text-muted-foreground transition-colors hover:bg-primary/12 hover:text-primary',
           vote.userVote === 1 && 'text-primary',
         )}
       >
@@ -42,7 +46,7 @@ export function VoteControl({
       </button>
       <span
         className={cn(
-          'min-w-4 text-center text-xs font-semibold tabular-nums',
+          'min-w-6 text-center text-xs font-semibold tabular-nums',
           vote.userVote === 1 && 'text-primary',
           vote.userVote === -1 && 'text-danger',
           vote.userVote === 0 && 'text-foreground',
@@ -56,7 +60,7 @@ export function VoteControl({
         aria-label="Downvote"
         onClick={() => vote.vote(-1)}
         className={cn(
-          'rounded-md p-1 text-muted-foreground transition-colors hover:bg-surface-hover hover:text-danger',
+          'rounded-full p-1 text-muted-foreground transition-colors hover:bg-danger/12 hover:text-danger',
           vote.userVote === -1 && 'text-danger',
         )}
       >

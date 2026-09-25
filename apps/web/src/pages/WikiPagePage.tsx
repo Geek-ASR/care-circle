@@ -37,7 +37,9 @@ export default function WikiPagePage() {
         <ChevronLeft className="h-4 w-4" /> Back to r/{community.slug}
       </Link>
 
-      <h1 className="text-2xl font-semibold text-foreground">{page.title}</h1>
+      <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">
+        {page.title}
+      </h1>
 
       {page.content ? (
         <MarkdownContent content={page.content} />

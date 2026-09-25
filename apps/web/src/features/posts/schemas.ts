@@ -7,24 +7,26 @@ export const REVIEW_POST_TYPES = [
   'hospital_review',
 ] as const
 
+export const POST_TYPES = [
+  'text',
+  'image',
+  'link',
+  'poll',
+  'question',
+  'experience',
+  'success_story',
+  'treatment_review',
+  'medication_review',
+  'doctor_review',
+  'hospital_review',
+  'research_discussion',
+  'lifestyle_tip',
+] as const
+
 export const createPostSchema = z
   .object({
     communityId: z.string().uuid('Choose a community'),
-    postType: z.enum([
-      'text',
-      'image',
-      'link',
-      'poll',
-      'question',
-      'experience',
-      'success_story',
-      'treatment_review',
-      'medication_review',
-      'doctor_review',
-      'hospital_review',
-      'research_discussion',
-      'lifestyle_tip',
-    ]),
+    postType: z.enum(POST_TYPES),
     title: z
       .string()
       .trim()

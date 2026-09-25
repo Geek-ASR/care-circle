@@ -33,7 +33,9 @@ export function SignupForm() {
     return (
       <div className="flex flex-col items-center gap-3 text-center">
         <MailCheck className="h-8 w-8 text-primary" aria-hidden="true" />
-        <h1 className="text-lg font-semibold text-foreground">Check your inbox</h1>
+        <h1 className="font-display text-2xl font-bold tracking-tight text-foreground">
+          Check your inbox
+        </h1>
         <p className="text-sm text-muted-foreground">
           We sent a verification link to <span className="text-foreground">{sentTo}</span>
           . Click it to activate your account.
@@ -52,7 +54,9 @@ export function SignupForm() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-xl font-semibold text-foreground">Create your account</h1>
+        <h1 className="font-display text-2xl font-bold tracking-tight text-foreground">
+          Create your account
+        </h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Join a community that understands what you&apos;re going through.
         </p>

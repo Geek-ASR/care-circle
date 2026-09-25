@@ -20,7 +20,7 @@ export function PostSortTabs({
     <div
       role="tablist"
       aria-label="Sort posts"
-      className="inline-flex items-center gap-1 rounded-md border border-border bg-surface p-1"
+      className="inline-flex max-w-full items-center gap-0.5 overflow-x-auto rounded-lg border border-border bg-surface-sunken p-1"
     >
       {OPTIONS.map((option) => {
         const Icon = option.icon
@@ -33,13 +33,13 @@ export function PostSortTabs({
             aria-selected={isActive}
             onClick={() => onChange(option.value)}
             className={cn(
-              'flex items-center gap-1.5 rounded-sm px-3 py-1.5 text-sm font-medium transition-colors',
+              'flex shrink-0 items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all',
               isActive
-                ? 'bg-surface-hover text-foreground'
+                ? 'bg-surface-raised text-foreground shadow-sm'
                 : 'text-muted-foreground hover:text-foreground',
             )}
           >
-            <Icon className="h-3.5 w-3.5" />
+            <Icon className={cn('h-3.5 w-3.5', isActive && 'text-primary')} />
             {option.label}
           </button>
         )

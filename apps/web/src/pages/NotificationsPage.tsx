@@ -9,6 +9,8 @@ import {
   useNotifications,
 } from '@/features/notifications/hooks/useNotifications'
 import type { NotificationWithActor } from '@/features/notifications/api/notifications'
+import { PageHeader } from '@/components/PageHeader'
+import { Bell, CheckCheck } from 'lucide-react'
 
 function notificationMessage(notification: NotificationWithActor): string {
   const actor =
@@ -43,14 +45,19 @@ export default function NotificationsPage() {
       <Helmet>
         <title>Notifications · CareCircle</title>
       </Helmet>
-      <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-foreground">Notifications</h1>
-        {unreadCount > 0 && (
-          <Button variant="ghost" size="sm" onClick={() => markAllRead.mutate()}>
-            Mark all read
-          </Button>
-        )}
-      </div>
+      <PageHeader
+        icon={Bell}
+        title="Notifications"
+        description="Replies, mentions, follows and badges — all in one place."
+        className="mb-6"
+        actions={
+          unreadCount > 0 && (
+            <Button variant="outline" size="sm" onClick={() => markAllRead.mutate()}>
+              <CheckCheck className="h-4 w-4" /> Mark all read
+            </Button>
+          )
+        }
+      />
 
       {notifications.length === 0 && (
         <p className="py-12 text-center text-sm text-muted-foreground">

@@ -32,7 +32,9 @@ export function ResetPasswordForm() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-xl font-semibold text-foreground">Choose a new password</h1>
+        <h1 className="font-display text-2xl font-bold tracking-tight text-foreground">
+          Choose a new password
+        </h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Open this page from the link in your email, then set a new password below.
         </p>

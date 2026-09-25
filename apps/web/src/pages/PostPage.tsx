@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import { formatDistanceToNowStrict } from 'date-fns'
-import { Pencil, Trash2 } from 'lucide-react'
+import { ArrowLeft, MessageSquare, Pencil, Share2, Trash2 } from 'lucide-react'
 import { Badge, Button, Skeleton } from '@/components/ui'
 import { MarkdownContent } from '@/components/MarkdownContent'
 import { MarkdownEditor } from '@/components/MarkdownEditor'
@@ -24,6 +24,8 @@ import {
 import { usePostMedia } from '@/features/posts/hooks/usePostMedia'
 import { getPostMediaUrl } from '@/features/posts/api/postMedia'
 import { updatePostContent } from '@/features/posts/api/posts'
+import { CommunityAvatar } from '@/components/CommunityAvatar'
+import { sharePost } from '@/features/posts/utils/share'
 import NotFoundPage from './NotFoundPage'
 
 export default function PostPage() {
@@ -43,8 +45,8 @@ export default function PostPage() {
   if (isLoading) {
     return (
       <div className="flex flex-col gap-4">
-        <Skeleton className="h-40" />
-        <Skeleton className="h-24" />
+        <Skeleton className="h-64 rounded-2xl" />
+        <Skeleton className="h-32 rounded-2xl" />
       </div>
     )
   }
@@ -74,48 +76,59 @@ export default function PostPage() {
         {post.body && <meta name="description" content={post.body.slice(0, 160)} />}
       </Helmet>
 
-      <article className="flex gap-3 rounded-lg border border-border bg-surface p-4">
-        <VoteControl
-          target={{ type: 'post', id: post.id }}
-          score={post.score}
-          userVote={post.userVote}
-        />
+      <Link
+        to={post.community ? `/r/${post.community.slug}` : '/'}
+        className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+      >
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+        {post.community ? `Back to ${post.community.name}` : 'Back to feed'}
+      </Link>
 
+      <article className="rounded-2xl border border-border bg-surface p-5 shadow-xs sm:p-7">
         <div className="min-w-0 flex-1">
-          <div className="mb-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+          <header className="flex items-center gap-3 text-xs text-muted-foreground">
             {post.community && (
-              <Link
-                to={`/r/${post.community.slug}`}
-                className="font-medium text-foreground hover:underline"
-              >
-                r/{post.community.slug}
+              <Link to={`/r/${post.community.slug}`} className="shrink-0">
+                <CommunityAvatar
+                  name={post.community.name}
+                  slug={post.community.slug}
+                  size="md"
+                />
               </Link>
             )}
-            <span>·</span>
-            {post.author ? (
-              <span>
-                Posted by{' '}
+            <div className="flex min-w-0 flex-col gap-0.5">
+              {post.community && (
                 <Link
-                  to={`/u/${post.author.username}`}
-                  className="font-medium text-foreground hover:underline"
+                  to={`/r/${post.community.slug}`}
+                  className="truncate text-sm font-semibold text-foreground hover:text-primary"
                 >
-                  {authorName}
+                  {post.community.name}
                 </Link>
+              )}
+              <span className="truncate">
+                {post.author ? (
+                  <Link
+                    to={`/u/${post.author.username}`}
+                    className="font-medium text-foreground/80 hover:text-foreground"
+                  >
+                    {authorName}
+                  </Link>
+                ) : (
+                  authorName
+                )}{' '}
+                ·{' '}
+                {formatDistanceToNowStrict(new Date(post.created_at), {
+                  addSuffix: true,
+                })}
+                {post.edited_at && ' · edited'}
               </span>
-            ) : (
-              <span>Posted by {authorName}</span>
-            )}
-            <span>·</span>
-            <span>
-              {formatDistanceToNowStrict(new Date(post.created_at), { addSuffix: true })}
-            </span>
-            {post.edited_at && <span className="italic">(edited)</span>}
-          </div>
+            </div>
+          </header>
 
           {editing ? (
             <div className="flex flex-col gap-2">
               <input
-                className="rounded-md border border-border bg-surface px-3 py-2 text-lg font-semibold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="mt-5 rounded-lg border border-border bg-surface px-3 py-2 font-display text-lg font-semibold text-foreground focus-visible:border-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/60"
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
               />
@@ -131,11 +144,11 @@ export default function PostPage() {
             </div>
           ) : (
             <>
-              <h1 className="text-xl font-semibold leading-snug text-foreground">
+              <h1 className="mt-5 font-display text-2xl font-bold leading-tight tracking-tight text-foreground sm:text-[28px]">
                 {post.title}
               </h1>
 
-              <div className="mt-1.5 flex flex-wrap items-center gap-2">
+              <div className="mt-3 flex flex-wrap items-center gap-2">
                 <PostTypeBadge postType={post.post_type} />
                 {post.rating != null && <StarRating value={post.rating} size="sm" />}
                 {post.is_nsfw && <Badge variant="danger">NSFW</Badge>}
@@ -143,7 +156,7 @@ export default function PostPage() {
                 {post.is_locked && <Badge variant="outline">Locked</Badge>}
                 {post.post_tags?.map(({ tag }) => (
                   <Badge key={tag.id} variant="outline">
-                    {tag.name}
+                    #{tag.name}
                   </Badge>
                 ))}
               </div>
@@ -159,7 +172,7 @@ export default function PostPage() {
                   href={post.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-3 block break-all text-sm text-primary hover:underline"
+                  className="mt-4 flex items-center gap-2 break-all rounded-xl border border-border bg-surface-sunken px-4 py-3 text-sm font-medium text-primary transition-colors hover:border-primary/40"
                 >
                   {post.url}
                 </a>
@@ -171,15 +184,41 @@ export default function PostPage() {
                     key={item.id}
                     src={getPostMediaUrl(item.storage_path)}
                     alt=""
-                    className="mt-3 max-h-[32rem] w-full rounded-md object-contain"
+                    className="mt-4 max-h-[36rem] w-full rounded-xl border border-border bg-surface-sunken object-contain"
                   />
                 ))}
 
-              {post.body && <MarkdownContent content={post.body} className="mt-3" />}
+              {post.body && (
+                <MarkdownContent
+                  content={post.body}
+                  className="mt-5 text-[15px] leading-relaxed"
+                />
+              )}
 
-              <div className="mt-3 flex items-center gap-4">
+              <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border pt-4">
+                <VoteControl
+                  target={{ type: 'post', id: post.id }}
+                  score={post.score}
+                  userVote={post.userVote}
+                  orientation="horizontal"
+                />
+                <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                  <MessageSquare className="h-4 w-4" aria-hidden="true" />
+                  {post.comment_count} {post.comment_count === 1 ? 'comment' : 'comments'}
+                </span>
                 <BookmarkButton postId={post.id} />
-                {!isOwner && <ReportDialog targetType="post" targetId={post.id} />}
+                <button
+                  type="button"
+                  onClick={() => void sharePost(post.id, post.title)}
+                  className="flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <Share2 className="h-4 w-4" aria-hidden="true" /> Share
+                </button>
+                {!isOwner && (
+                  <span className="ml-auto">
+                    <ReportDialog targetType="post" targetId={post.id} />
+                  </span>
+                )}
               </div>
 
               <ModeratorPostActions
@@ -219,7 +258,7 @@ export default function PostPage() {
       </article>
 
       {post.is_locked ? (
-        <p className="text-center text-sm text-muted-foreground">
+        <p className="rounded-xl border border-border bg-surface-sunken px-4 py-3 text-center text-sm text-muted-foreground">
           This post is locked. New comments are disabled.
         </p>
       ) : (

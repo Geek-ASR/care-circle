@@ -7,6 +7,8 @@ import { ConditionSelect } from '@/features/conditions/components/ConditionSelec
 import { useConditions } from '@/features/conditions/hooks/useConditions'
 import { useConditionResources } from '@/features/resources/hooks/useResources'
 import type { ResourceCategory } from '@/types/database'
+import { PageHeader } from '@/components/PageHeader'
+import { LifeBuoy } from 'lucide-react'
 
 const CATEGORY_LABELS: Record<ResourceCategory, string> = {
   hotline: 'Hotline',
@@ -34,12 +36,11 @@ export default function ResourcesPage() {
       <Helmet>
         <title>Resources · CareCircle</title>
       </Helmet>
-      <div>
-        <h1 className="text-xl font-semibold text-foreground">Resources</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Curated hotlines, organizations, and research for specific conditions.
-        </p>
-      </div>
+      <PageHeader
+        icon={LifeBuoy}
+        title="Resources"
+        description="Curated hotlines, organizations, and research for specific conditions."
+      />
 
       {isLoadingConditions ? (
         <Skeleton className="h-10 max-w-xs" />

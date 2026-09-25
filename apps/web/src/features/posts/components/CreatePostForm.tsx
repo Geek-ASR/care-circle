@@ -25,7 +25,12 @@ import { StarRating } from './StarRating'
 import { PollOptionsEditor } from '@/features/polls/components/PollOptionsEditor'
 import { createPollOptions } from '@/features/polls/api/polls'
 import { useCreatePost } from '../hooks/usePosts'
-import { createPostSchema, REVIEW_POST_TYPES, type CreatePostValues } from '../schemas'
+import {
+  createPostSchema,
+  POST_TYPES,
+  REVIEW_POST_TYPES,
+  type CreatePostValues,
+} from '../schemas'
 import { uploadPostImage, validateImageFile } from '../api/postMedia'
 import type { PostType } from '@/types/database'
 
@@ -73,6 +78,10 @@ export function CreatePostForm() {
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
 
   const preselected = communities?.find((c) => c.slug === searchParams.get('community'))
+  // ?type=question|poll|... lets entry points (e.g. the home composer's quick actions)
+  // open the form already set to the right kind of post.
+  const requestedType = searchParams.get('type')
+  const initialPostType = POST_TYPES.find((t) => t === requestedType) ?? 'text'
 
   const {
     register,
@@ -85,7 +94,7 @@ export function CreatePostForm() {
     resolver: zodResolver(createPostSchema),
     defaultValues: {
       communityId: preselected?.id ?? '',
-      postType: 'text',
+      postType: initialPostType,
       title: '',
       body: '',
       url: '',

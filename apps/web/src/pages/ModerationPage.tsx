@@ -5,6 +5,8 @@ import { AdminOverview } from '@/features/moderation/components/AdminOverview'
 import { ReportQueue } from '@/features/moderation/components/ReportQueue'
 import { PendingCommunitiesQueue } from '@/features/moderation/components/PendingCommunitiesQueue'
 import { AdminResourcesPanel } from '@/features/resources/components/AdminResourcesPanel'
+import { PageHeader } from '@/components/PageHeader'
+import { Shield } from 'lucide-react'
 
 export default function ModerationPage() {
   const { isModerator, isAdmin, isLoading } = useIsModerator()
@@ -14,7 +16,11 @@ export default function ModerationPage() {
       <Helmet>
         <title>Moderation · CareCircle</title>
       </Helmet>
-      <h1 className="text-xl font-semibold text-foreground">Moderation</h1>
+      <PageHeader
+        icon={Shield}
+        title="Moderation"
+        description="Review reports, pending communities and keep every space safe."
+      />
 
       {isLoading && (
         <div className="flex flex-col gap-2">
