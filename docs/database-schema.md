@@ -93,6 +93,7 @@
 |---|---|---|---|
 | `reports` | A member's report of a post/comment/user/message. | `reporter_id` (nullable), `target_type`/`target_id`, `reason`, `status`, `reviewed_by` | → `profiles`; `target_type`/`target_id` polymorphic, resolved by the app. |
 | `moderation_actions` | Community-scoped moderator action log (remove post, ban user, lock thread, ...). Immutable — no update/delete. | `moderator_id`, `community_id`, `action_type`, `target_type`/`target_id` | → `profiles`, → `communities`. |
+| `community_bans` | Per-community mutes and bans (`kind`), optionally temporary via `expires_at`. Unique per (community, user, kind). Enforced in post/comment/join insert policies via `is_restricted_from()`; an AFTER trigger logs a `moderation_actions` row, removes banned members and sends an anonymous `moderator_message` notification. | `community_id`, `user_id`, `kind`, `reason`, `expires_at`, `created_by` | → `communities`, → `profiles` (user and moderator). |
 | `audit_logs` | Site-wide admin audit trail (role grants, community approvals). Immutable. | `actor_id`, `action`, `metadata` (jsonb) | → `profiles`. |
 | `activity_logs` | Per-user "recent activity" feed. | `user_id`, `action_type`, `metadata` (jsonb) | → `profiles`. |
 
