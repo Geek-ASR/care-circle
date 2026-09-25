@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { BookOpen, ExternalLink, Plus, Users } from 'lucide-react'
+import { BookOpen, ExternalLink, Plus, Settings2, Users } from 'lucide-react'
 import { Button, Skeleton } from '@/components/ui'
 import { useAuth } from '@/contexts/AuthContext'
 import {
@@ -17,6 +17,7 @@ import { getConditionCategory } from '@/features/conditions/constants'
 import { PostList } from '@/features/posts/components/PostList'
 import { PostSortTabs } from '@/features/posts/components/PostSortTabs'
 import type { PostSort } from '@/features/posts/types'
+import { useIsModeratorOfCommunity } from '@/features/moderation/hooks/useModeration'
 import NotFoundPage from './NotFoundPage'
 
 export default function CommunityPage() {
@@ -27,6 +28,7 @@ export default function CommunityPage() {
   const { data: resources } = useCommunityResources(community?.id)
   const { data: wikiPages } = useWikiPages(community?.id)
   const [sort, setSort] = useState<PostSort>('hot')
+  const { isModerator } = useIsModeratorOfCommunity(community?.id)
 
   if (isLoading) {
     return (
@@ -87,6 +89,13 @@ export default function CommunityPage() {
                 className="border-4 border-surface shadow-md"
               />
               <div className="flex items-center gap-2">
+                {isModerator && (
+                  <Button asChild variant="ghost" size="sm">
+                    <Link to={`/r/${community.slug}/settings`}>
+                      <Settings2 className="h-4 w-4" /> Manage
+                    </Link>
+                  </Button>
+                )}
                 {user && (
                   <Button asChild variant="outline" size="sm">
                     <Link to={`/submit?community=${community.slug}`}>
