@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { toast } from '@/store/toastStore'
+import { describeWriteError } from '@/utils/errors'
 import { createReport, type CreateReportInput } from '../api/reports'
 
 export function useCreateReport() {
@@ -13,10 +14,10 @@ export function useCreateReport() {
         variant: 'success',
       })
     },
-    onError: () => {
+    onError: (error) => {
       toast({
         title: 'Could not submit report',
-        description: 'Please try again.',
+        description: describeWriteError(error, 'Please try again.'),
         variant: 'danger',
       })
     },

@@ -35,7 +35,7 @@ import {
 import { uploadPostImage, validateImageFile } from '../api/postMedia'
 import type { PostType } from '@/types/database'
 import { useDraftAutosave } from '@/features/drafts/hooks/useDraftAutosave'
-import { isPermissionDenied } from '@/features/community-bans/utils/restrictions'
+import { describeWriteError } from '@/utils/errors'
 import { DraftStatus } from '@/features/drafts/components/DraftStatus'
 
 const TEXT_LIKE_TYPES: PostType[] = [
@@ -196,11 +196,11 @@ export function CreatePostForm() {
       navigate(`/posts/${post.id}`)
     } catch (error) {
       setFormError(
-        isPermissionDenied(error)
-          ? "You can't post in this community right now — you may be muted or banned there. Check the community page for details."
-          : error instanceof Error
-            ? error.message
-            : 'Could not create your post.',
+        describeWriteError(
+          error,
+          error instanceof Error ? error.message : 'Could not create your post.',
+          "You can't post in this community right now — you may be muted or banned there. Check the community page for details.",
+        ),
       )
     }
   }

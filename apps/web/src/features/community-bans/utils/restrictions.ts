@@ -32,8 +32,4 @@ export function strongestActive<T extends Pick<CommunityBan, 'kind' | 'expires_a
   return active.sort((a, b) => order[a.kind] - order[b.kind])[0] ?? null
 }
 
-/** Supabase surfaces RLS denials as this Postgres error text. */
-export function isPermissionDenied(error: unknown): boolean {
-  const message = error instanceof Error ? error.message : String(error ?? '')
-  return /row-level security|permission denied/i.test(message)
-}
+export { isPermissionDenied } from '@/utils/errors'

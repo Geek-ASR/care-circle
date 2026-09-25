@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { describeWriteError } from '@/utils/errors'
 import { useNavigate } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -36,7 +37,10 @@ export function CreateCommunityForm() {
       navigate(`/r/${community.slug}`)
     } catch (error) {
       setFormError(
-        error instanceof Error ? error.message : 'Could not create your community.',
+        describeWriteError(
+          error,
+          error instanceof Error ? error.message : 'Could not create your community.',
+        ),
       )
     }
   }

@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui'
 import { MarkdownEditor } from '@/components/MarkdownEditor'
 import { useAuth } from '@/contexts/AuthContext'
-import { isPermissionDenied } from '@/features/community-bans/utils/restrictions'
+import { describeWriteError } from '@/utils/errors'
 import { useCreateComment } from '../hooks/useComments'
 
 interface CommentFormProps {
@@ -48,9 +48,11 @@ export function CommentForm({
       })
     } catch (err) {
       setError(
-        isPermissionDenied(err)
-          ? "You can't comment here right now — this post may be locked, or you may be muted in this community."
-          : 'Your comment could not be posted. Please try again.',
+        describeWriteError(
+          err,
+          'Your comment could not be posted. Please try again.',
+          "You can't comment here right now — this post may be locked, or you may be muted in this community.",
+        ),
       )
       return
     }
